@@ -16,21 +16,84 @@ public class UserAdaptor
     {
         helper = new UserHelper(context);
     }
-    public long insertData(String name, String password, String email) //returns ID if successful, is - on failure
+    public long insertData(String name, String password, String email, int mod) //returns ID if successful, is - on failure
     {
         SQLiteDatabase db =helper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(UserHelper.COLUMN_NAME, name);
         contentValues.put(UserHelper.COLUMN_PW, password);
         contentValues.put(UserHelper.COLUMN_EMAIL, email);
+        contentValues.put(UserHelper.COLUMN_MOD, mod);
         contentValues.put(UserHelper.COLUMN_REP, 1);
         contentValues.put(UserHelper.COLUMN_CREATED, 0);
         return db.insert(UserHelper.TABLE_NAME, null, contentValues);
     }
+    public String getPassword(String name) //returns a string with the user's password.
+    {
+        SQLiteDatabase db= helper.getWritableDatabase();
+        String[] columns={UserHelper.COLUMN_PW};
+        Cursor cursor = db.query(UserHelper.TABLE_NAME, columns, UserHelper.COLUMN_NAME+" = '"+name+"'", null, null, null, null);
+        StringBuffer output = new StringBuffer();
+        while(cursor.moveToNext())
+        {
+            int cpw = cursor.getColumnIndex(UserHelper.COLUMN_PW);
+            String upw = cursor.getString(cpw);
+            output.append(upw);
+        }
+        return output.toString();
+    }
+
+    public String getName(int uid)
+    {
+        SQLiteDatabase db= helper.getWritableDatabase();
+        String[] columns={UserHelper.COLUMN_NAME};
+        Cursor cursor = db.query(UserHelper.TABLE_NAME, columns, UserHelper.COLUMN_ID+" = '"+uid+"'", null, null, null, null);
+        StringBuffer output = new StringBuffer();
+        while(cursor.moveToNext())
+        {
+            int cname = cursor.getColumnIndex(UserHelper.COLUMN_PW);
+            String uname = cursor.getString(cname);
+            output.append(uname);
+        }
+        return output.toString();
+    }
+
+    public int getID(String name, String pw) //returns the ID of a user if given the name and pw.
+    {
+        SQLiteDatabase db= helper.getWritableDatabase();
+        String[] columns={UserHelper.COLUMN_ID};
+        String[] selectionArgs={name, pw};
+        Cursor cursor = db.query(UserHelper.TABLE_NAME, columns, UserHelper.COLUMN_NAME+ " =? AND "+UserHelper.COLUMN_PW+" =?", selectionArgs, null, null, null);
+        //StringBuffer output = new StringBuffer();
+        int uid = 0;
+        while(cursor.moveToNext()) //this shouldn't need to loop
+        {
+            int cid = cursor.getColumnIndex(UserHelper.COLUMN_ID);
+            uid = cursor.getInt(cid);
+        }
+        //return output.toString();
+        return uid;
+    }
+
+    public void updatePW(int ID, String newPW) //updates password for a user with a given ID.
+    {
+        SQLiteDatabase db= helper.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(UserHelper.COLUMN_PW, newPW);
+
+        db.update(UserHelper.TABLE_NAME, contentValues, UserHelper.COLUMN_ID+" = '"+ID+"'", null );
+    }
+
+    public void deleteUser(int ID)
+    {
+        SQLiteDatabase db= helper.getWritableDatabase();
+        db.delete(UserHelper.TABLE_NAME, UserHelper.COLUMN_ID+" = '"+ID+"'", null);
+    }
+
     public String getAllData()
     {
         SQLiteDatabase db= helper.getWritableDatabase();
-        String[] columns={UserHelper.COLUMN_ID, UserHelper.COLUMN_NAME, UserHelper.COLUMN_PW, UserHelper.COLUMN_REP, UserHelper.COLUMN_CREATED, UserHelper.COLUMN_EMAIL, UserHelper.COLUMN_PW};
+        String[] columns={UserHelper.COLUMN_ID, UserHelper.COLUMN_NAME, UserHelper.COLUMN_PW, UserHelper.COLUMN_REP, UserHelper.COLUMN_CREATED, UserHelper.COLUMN_EMAIL, UserHelper.COLUMN_MOD};
         Cursor cursor = db.query(UserHelper.TABLE_NAME, columns, null, null, null, null, null);
         StringBuffer output = new StringBuffer();
         while(cursor.moveToNext())
@@ -52,14 +115,17 @@ public class UserAdaptor
 
             int cpw = cursor.getColumnIndex(UserHelper.COLUMN_PW);
             String upw = cursor.getString(cpw);
-            output.append(uid+" "+uname+" "+urep+" "+ucreated+" "+uemail+" "+upw+"\n");
+
+            int cmod = cursor.getColumnIndex(UserHelper.COLUMN_MOD);
+            int umod = cursor.getInt(cmod);
+            output.append(uid+" "+uname+" "+urep+" "+ucreated+" "+uemail+" "+upw+" "+umod+"\n");
         }
         return output.toString();
     }
     public String getSomeData(String selection, String[] selectionArgs, String groupBy, String having, String orderBy)
     {
         SQLiteDatabase db= helper.getWritableDatabase();
-        String[] columns={UserHelper.COLUMN_ID, UserHelper.COLUMN_NAME, UserHelper.COLUMN_PW, UserHelper.COLUMN_REP, UserHelper.COLUMN_CREATED, UserHelper.COLUMN_EMAIL, UserHelper.COLUMN_PW};
+        String[] columns={UserHelper.COLUMN_ID, UserHelper.COLUMN_NAME, UserHelper.COLUMN_PW, UserHelper.COLUMN_REP, UserHelper.COLUMN_CREATED, UserHelper.COLUMN_EMAIL, UserHelper.COLUMN_MOD};
         Cursor cursor = db.query(UserHelper.TABLE_NAME, columns, selection, selectionArgs, groupBy, having, orderBy);
         StringBuffer output = new StringBuffer();
         while(cursor.moveToNext())
@@ -81,7 +147,11 @@ public class UserAdaptor
 
             int cpw = cursor.getColumnIndex(UserHelper.COLUMN_PW);
             String upw = cursor.getString(cpw);
-            output.append(uid+" "+uname+" "+urep+" "+ucreated+" "+uemail+" "+upw+"\n");
+
+            int cmod = cursor.getColumnIndex(UserHelper.COLUMN_MOD);
+            int umod = cursor.getInt(cmod);
+
+            output.append(uid+" "+uname+" "+urep+" "+ucreated+" "+uemail+" "+upw+" "+umod+"\n");
         }
         return output.toString();
     }
@@ -97,10 +167,11 @@ public class UserAdaptor
         private static final String COLUMN_REP = "UserRep";
         private static final String COLUMN_CREATED = "UserCreated";
         private static final String COLUMN_EMAIL = "UserEmail";
+        private static final String COLUMN_MOD = "Moderator";
         private static final String COLUMN_PW = "UserPW";
         private Context context;
 
-        private static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_NAME + " VARCHAR(50), " + COLUMN_REP + " INTEGER, " + COLUMN_CREATED + " DATETIME, " + COLUMN_EMAIL + " VARCHAR(50), " + COLUMN_PW + " VARCHAR(50));";
+        private static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_NAME + " VARCHAR(50), " + COLUMN_REP + " INTEGER, " + COLUMN_CREATED + " DATETIME, " + COLUMN_EMAIL + " VARCHAR(50), " +COLUMN_MOD + " INTEGER, "+ COLUMN_PW + " VARCHAR(50));";
         private static final String DROP_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME;
 
         //SQLiteDatabase database;
@@ -119,7 +190,7 @@ public class UserAdaptor
             }
             catch (SQLiteException e)
             {
-
+                //throw a user friendly error
             }
         }
 
@@ -133,32 +204,10 @@ public class UserAdaptor
             }
             catch (SQLiteException e)
             {
-
+                //throw a user friendly error
             }
         }
-        public String loadHandler()
-        {
-            return "";
-        }
 
-        public void addHandler(PP_users user)
-        {
-        }
-
-        public PP_users findHandler(String username)
-        {
-            return null;
-        }
-
-        public boolean deleteHandler(int ID)
-        {
-            return false;
-        }
-
-        public boolean updateHandler(int ID, String name)
-        {
-            return false;
-        }
 
 
     }
