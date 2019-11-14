@@ -1,5 +1,6 @@
 package com.example.pottypoll;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
@@ -12,6 +13,22 @@ public class ImageAdaptor
     public ImageAdaptor(Context context)
     {
         helper = new ImageAdaptor.ImageHelper(context);
+    }
+
+    public long insertData(int bathroomID, int userID, String IMG_Address ) //returns ID if successful, is - on failure
+    {
+        SQLiteDatabase db =helper.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+
+        //data to store
+        contentValues.put(ImageHelper.COLUMN_PARENT, bathroomID);
+        contentValues.put(ImageHelper.COLUMN_AUTHOR, userID);
+        contentValues.put(ImageHelper.COLUMN_LOCATION, IMG_Address);
+        contentValues.put(ImageHelper.COLUMN_DATE, 0);
+        contentValues.put(ImageHelper.COLUMN_HELPFUL, 0);
+        contentValues.put(ImageHelper.COLUMN_UNHELPFUL, 0);
+
+        return db.insert(ImageAdaptor.ImageHelper.TABLE_NAME, null, contentValues);
     }
 
     static class ImageHelper extends SQLiteOpenHelper
@@ -28,7 +45,7 @@ public class ImageAdaptor
         private static final String COLUMN_UNHELPFUL = "Unhelpful";
         private Context context;
 
-        private static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_PARENT + " INTEGER, " + COLUMN_AUTHOR + " INTEGER, " + COLUMN_DATE + " DATETIME, " + COLUMN_LOCATION + " VARCHAR(250), " +COLUMN_UNHELPFUL + " INTEGER, "+ COLUMN_HELPFUL + " INTEGER);";
+        private static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_PARENT + " INTEGER, " + COLUMN_AUTHOR + " INTEGER, " + COLUMN_DATE + " INTEGER, " + COLUMN_LOCATION + " VARCHAR(250), " +COLUMN_UNHELPFUL + " INTEGER, "+ COLUMN_HELPFUL + " INTEGER);";
         private static final String DROP_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME;
 
         //SQLiteDatabase database;
