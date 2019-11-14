@@ -16,6 +16,7 @@ public class UserAdaptor
     {
         helper = new UserHelper(context);
     }
+
     public long insertData(String name, String password, String email, int mod) //returns ID if successful, is - on failure
     {
         SQLiteDatabase db =helper.getWritableDatabase();
@@ -26,6 +27,7 @@ public class UserAdaptor
         contentValues.put(UserHelper.COLUMN_MOD, mod);
         contentValues.put(UserHelper.COLUMN_REP, 1);
         contentValues.put(UserHelper.COLUMN_CREATED, 0);
+
         return db.insert(UserHelper.TABLE_NAME, null, contentValues);
     }
     public String getPassword(String name) //returns a string with the user's password.
@@ -58,7 +60,7 @@ public class UserAdaptor
         return output.toString();
     }
 
-    public int getID(String name, String pw) //returns the ID of a user if given the name and pw.
+    public int getID(String name, String pw) //returns the ID of a user if given the name and pw. -1 if failure
     {
         SQLiteDatabase db= helper.getWritableDatabase();
         String[] columns={UserHelper.COLUMN_ID};
@@ -66,7 +68,7 @@ public class UserAdaptor
         Cursor cursor = db.query(UserHelper.TABLE_NAME, columns, UserHelper.COLUMN_NAME+ " =? AND "+UserHelper.COLUMN_PW+" =?", selectionArgs, null, null, null);
         //StringBuffer output = new StringBuffer();
         int uid = -1;
-        while(cursor.moveToNext()) //this shouldn't need to loop
+        while(cursor.moveToNext()) //this shouldn't need to loop, since you shouldn't be able to have multiple users with same username
         {
             int cid = cursor.getColumnIndex(UserHelper.COLUMN_ID);
             uid = cursor.getInt(cid);
@@ -171,7 +173,7 @@ public class UserAdaptor
         private static final String COLUMN_PW = "UserPW";
         private Context context;
 
-        private static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_NAME + " VARCHAR(50), " + COLUMN_REP + " INTEGER, " + COLUMN_CREATED + " DATETIME, " + COLUMN_EMAIL + " VARCHAR(50), " +COLUMN_MOD + " INTEGER, "+ COLUMN_PW + " VARCHAR(50));";
+        private static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_NAME + " VARCHAR(50), " + COLUMN_REP + " INTEGER, " + COLUMN_CREATED + " INTEGER, " + COLUMN_EMAIL + " VARCHAR(50), " +COLUMN_MOD + " INTEGER, "+ COLUMN_PW + " VARCHAR(50));";
         private static final String DROP_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME;
 
         //SQLiteDatabase database;
