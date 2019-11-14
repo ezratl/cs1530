@@ -2,6 +2,7 @@ package com.example.pottypoll;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -32,6 +33,33 @@ public class CommentAdaptor
         return db.insert(CommentAdaptor.CommentHelper.TABLE_NAME, null, contentValues);
     }
 
+    public void deleteComment(int ID) //deletes the comment with the given ID
+    {
+        SQLiteDatabase db= helper.getWritableDatabase();
+        db.delete(CommentHelper.TABLE_NAME, CommentHelper.COLUMN_ID+" = '"+ID+"'", null);
+    }
+
+    //getters
+
+    public String getComments(int bathroomID) //Returns author ID and Comment Text for a given bathroom
+    {
+        SQLiteDatabase db= helper.getWritableDatabase();
+        String[] columns={CommentHelper.COLUMN_AUTHOR, CommentHelper.COLUMN_TEXT};
+        Cursor cursor = db.query(CommentHelper.TABLE_NAME, columns, CommentHelper.COLUMN_PARENT+" = '"+bathroomID+"'", null, null, null, null);
+        StringBuffer output = new StringBuffer();
+        while(cursor.moveToNext())
+        {
+            int cparent = cursor.getColumnIndex(CommentHelper.COLUMN_AUTHOR);
+            int uparent = cursor.getInt(cparent);
+
+            int ctext = cursor.getColumnIndex(CommentHelper.COLUMN_TEXT);
+            String utext = cursor.getString(ctext);
+
+            output.append(uparent+" "+utext+"\n");
+        }
+        return output.toString();
+
+    }
     static class CommentHelper extends SQLiteOpenHelper
     {
         private static final int DATABASE_VERSION = 1;
