@@ -1,5 +1,6 @@
 package com.example.pottypoll;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
@@ -12,6 +13,31 @@ public class BathroomAdaptor
     public BathroomAdaptor(Context context)
     {
         helper = new BathroomAdaptor.BathroomHelper(context);
+    }
+
+    //insert
+    public long insertData(int userID, String gender, String address, String name, int floor, String hours, int shower, int sink, int papertowels) //returns ID if successful, is - on failure
+    {
+        SQLiteDatabase db =helper.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+
+        //data to store
+
+        contentValues.put(BathroomHelper.COLUMN_AUTHOR, userID);
+        contentValues.put(BathroomHelper.COLUMN_LOCATION, address );
+        contentValues.put(BathroomHelper.COLUMN_GENDER, gender);
+        contentValues.put(BathroomHelper.COLUMN_BUILDNAME, name );
+        contentValues.put(BathroomHelper.COLUMN_FLOOR, floor);
+        contentValues.put(BathroomHelper.COLUMN_HOURS, hours);
+        contentValues.put(BathroomHelper.COLUMN_SHOWER, shower);
+        contentValues.put(BathroomHelper.COLUMN_SINK, sink);
+        contentValues.put(BathroomHelper.COLUMN_PAPERTOWELS, papertowels);
+        contentValues.put(BathroomHelper.COLUMN_RATERS, 0);
+        contentValues.put(BathroomHelper.COLUMN_RATING, 0);
+        contentValues.put(BathroomHelper.COLUMN_ACTIVE, 1);
+        contentValues.put(BathroomHelper.COLUMN_DATE, 0);
+
+        return db.insert(BathroomAdaptor.BathroomHelper.TABLE_NAME, null, contentValues);
     }
 
     static class BathroomHelper extends SQLiteOpenHelper
@@ -35,7 +61,7 @@ public class BathroomAdaptor
         private static final String COLUMN_DATE = "DateCreated";
         private Context context;
 
-        private static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "+COLUMN_LOCATION + " VARCHAR(250), "+COLUMN_BUILDNAME + " VARCHAR(250), "+COLUMN_FLOOR + " INTEGER, "+COLUMN_HOURS + " VARCHAR(250), " + COLUMN_AUTHOR + " INTEGER, " + COLUMN_DATE + " DATETIME, " + COLUMN_GENDER + " VARCHAR(25), " +COLUMN_RATING + " INTEGER, "+COLUMN_SHOWER + " INTEGER, "+COLUMN_SINK + " INTEGER, "+COLUMN_PAPERTOWELS + " INTEGER, "+COLUMN_SHOWER + " INTEGER, "+COLUMN_ACTIVE + " INTEGER, "+ COLUMN_RATERS + " INTEGER);";
+        private static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "+COLUMN_LOCATION + " VARCHAR(250), "+COLUMN_BUILDNAME + " VARCHAR(250), "+COLUMN_FLOOR + " INTEGER, "+COLUMN_HOURS + " VARCHAR(250), " + COLUMN_AUTHOR + " INTEGER, " + COLUMN_DATE + " INTEGER, " + COLUMN_GENDER + " VARCHAR(25), " +COLUMN_RATING + " INTEGER, "+COLUMN_SHOWER + " INTEGER, "+COLUMN_SINK + " INTEGER, "+COLUMN_PAPERTOWELS + " INTEGER, "+COLUMN_ACTIVE + " INTEGER, "+ COLUMN_RATERS + " INTEGER);";
         private static final String DROP_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME;
 
         //SQLiteDatabase database;
