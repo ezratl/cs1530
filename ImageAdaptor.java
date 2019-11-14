@@ -2,6 +2,7 @@ package com.example.pottypoll;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -29,6 +30,33 @@ public class ImageAdaptor
         contentValues.put(ImageHelper.COLUMN_UNHELPFUL, 0);
 
         return db.insert(ImageAdaptor.ImageHelper.TABLE_NAME, null, contentValues);
+    }
+
+    public void deleteImage(int ID) //delete bathroom with given id
+    {
+        SQLiteDatabase db= helper.getWritableDatabase();
+        db.delete(ImageHelper.TABLE_NAME, ImageHelper.COLUMN_ID+" = '"+ID+"'", null);
+    }
+
+    //getters
+
+    public String getImage(int bathroomID) //Returns author ID and Image Location Text for a given bathroom
+    {
+        SQLiteDatabase db = helper.getWritableDatabase();
+        String[] columns = {ImageHelper.COLUMN_AUTHOR, ImageHelper.COLUMN_LOCATION};
+        Cursor cursor = db.query(ImageHelper.TABLE_NAME, columns, ImageHelper.COLUMN_PARENT + " = '" + bathroomID + "'", null, null, null, null);
+        StringBuffer output = new StringBuffer();
+        while (cursor.moveToNext())
+        {
+            int cparent = cursor.getColumnIndex(ImageHelper.COLUMN_AUTHOR);
+            int uparent = cursor.getInt(cparent);
+
+            int ctext = cursor.getColumnIndex(ImageHelper.COLUMN_LOCATION);
+            String utext = cursor.getString(ctext);
+
+            output.append(uparent + " " + utext + "\n");
+        }
+        return output.toString(); //UID LOCATION then next line then UID LOCATION
     }
 
     static class ImageHelper extends SQLiteOpenHelper
