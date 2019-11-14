@@ -1,5 +1,6 @@
 package com.example.pottypoll;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
@@ -12,6 +13,23 @@ public class CommentAdaptor
     public CommentAdaptor(Context context)
     {
         helper = new CommentAdaptor.CommentHelper(context);
+    }
+
+    public long insertData(int bathroomID, int userID, int rating, String comment) //returns ID if successful, is - on failure
+    {
+        SQLiteDatabase db =helper.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+
+        //data to store
+        contentValues.put(CommentHelper.COLUMN_PARENT, bathroomID);
+        contentValues.put(CommentHelper.COLUMN_AUTHOR, userID);
+        contentValues.put(CommentHelper.COLUMN_RATING, rating);
+        contentValues.put(CommentHelper.COLUMN_TEXT, comment); //Must be 250 Chars max
+        contentValues.put(CommentHelper.COLUMN_DATE, 0);
+        contentValues.put(CommentHelper.COLUMN_HELPFUL, 0);
+        contentValues.put(CommentHelper.COLUMN_UNHELPFUL, 0);
+
+        return db.insert(CommentAdaptor.CommentHelper.TABLE_NAME, null, contentValues);
     }
 
     static class CommentHelper extends SQLiteOpenHelper
@@ -29,7 +47,7 @@ public class CommentAdaptor
         private static final String COLUMN_TEXT = "Comment";
         private Context context;
 
-        private static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_PARENT + " INTEGER, " + COLUMN_AUTHOR + " INTEGER, " + COLUMN_DATE + " DATETIME, " + COLUMN_TEXT + " VARCHAR(250), " +COLUMN_RATING + " INTEGER, "+COLUMN_UNHELPFUL + " INTEGER, "+ COLUMN_HELPFUL + " INTEGER);";
+        private static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_PARENT + " INTEGER, " + COLUMN_AUTHOR + " INTEGER, " + COLUMN_DATE + " INTEGER, " + COLUMN_TEXT + " VARCHAR(250), " +COLUMN_RATING + " INTEGER, "+COLUMN_UNHELPFUL + " INTEGER, "+ COLUMN_HELPFUL + " INTEGER);";
         private static final String DROP_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME;
 
         //SQLiteDatabase database;
