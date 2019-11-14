@@ -65,7 +65,7 @@ public class UserAdaptor
         String[] selectionArgs={name, pw};
         Cursor cursor = db.query(UserHelper.TABLE_NAME, columns, UserHelper.COLUMN_NAME+ " =? AND "+UserHelper.COLUMN_PW+" =?", selectionArgs, null, null, null);
         //StringBuffer output = new StringBuffer();
-        int uid = 0;
+        int uid = -1;
         while(cursor.moveToNext()) //this shouldn't need to loop
         {
             int cid = cursor.getColumnIndex(UserHelper.COLUMN_ID);
