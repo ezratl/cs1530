@@ -39,7 +39,50 @@ public class CommentAdaptor
         db.delete(CommentHelper.TABLE_NAME, CommentHelper.COLUMN_ID+" = '"+ID+"'", null);
     }
 
+    public void MarkHelpful(int ID)
+    {
+        SQLiteDatabase db= helper.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(CommentHelper.COLUMN_HELPFUL, getHelpful(ID) + 1);
+
+        db.update(CommentHelper.TABLE_NAME, contentValues, CommentHelper.COLUMN_ID+" = '"+ID+"'", null );
+    }
+    public void MarkUnhelpful(int ID)
+    {
+        SQLiteDatabase db= helper.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(CommentHelper.COLUMN_UNHELPFUL, getUnhelpful(ID) + 1);
+
+        db.update(CommentHelper.TABLE_NAME, contentValues, CommentHelper.COLUMN_ID+" = '"+ID+"'", null );
+    }
+
     //getters
+    public int getHelpful(int uid) //returns -1 on error
+    {
+        SQLiteDatabase db= helper.getWritableDatabase();
+        String[] columns={CommentHelper.COLUMN_HELPFUL};
+        Cursor cursor = db.query(CommentHelper.TABLE_NAME, columns, CommentHelper.COLUMN_ID+" = '"+uid+"'", null, null, null, null);
+        int value = -1;
+        while(cursor.moveToNext()) //this shouldn't ever loop
+        {
+            int cname = cursor.getColumnIndex(CommentHelper.COLUMN_HELPFUL);
+            value = cursor.getInt(cname);
+        }
+        return value;
+    }
+    public int getUnhelpful(int uid) //returns -1 on error
+    {
+        SQLiteDatabase db= helper.getWritableDatabase();
+        String[] columns={CommentHelper.COLUMN_UNHELPFUL};
+        Cursor cursor = db.query(CommentHelper.TABLE_NAME, columns, CommentHelper.COLUMN_ID+" = '"+uid+"'", null, null, null, null);
+        int value = -1;
+        while(cursor.moveToNext()) //this shouldn't ever loop
+        {
+            int cname = cursor.getColumnIndex(CommentHelper.COLUMN_UNHELPFUL);
+            value = cursor.getInt(cname);
+        }
+        return value;
+    }
 
     public String getComments(int bathroomID) //Returns author ID and Comment Text for a given bathroom
     {
