@@ -1,0 +1,71 @@
+.enter {
+	position: absolute;
+  top: 60%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  background-color: #E1DB1B;
+  color: black;
+  font-size: 16px;
+ 
+  border: none;
+  cursor: pointer;
+ 
+	
+	
+	
+	
+}
+
+
+
+.square-set .sign_in {
+	position: absolute;
+  top: 70%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  background-color: #E1DB1B;
+  color: black;
+  font-size: 16px;
+ 
+  border: none;
+  cursor: pointer;
+ 
+	
+	
+}
+
+.square-set .forgot_pass {
+position: absolute;
+  top: 75%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  background-color: #E1DB1B;
+  color: black;
+  font-size: 16px;
+ 
+  border: none;
+  cursor: pointer;
+  
+}
+
+.square-set .sign_up {
+	position: absolute;
+  top: 80%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  background-color: #E1DB1B;
+  color: black;
+  font-size: 16px;
+ 
+  border: none;
+  cursor: pointer;
+ 
+	
+	
+	
+}
+ 
