@@ -38,7 +38,54 @@ public class ImageAdaptor
         db.delete(ImageHelper.TABLE_NAME, ImageHelper.COLUMN_ID+" = '"+ID+"'", null);
     }
 
+        public void MarkHelpful(int ID)
+    {
+        SQLiteDatabase db= helper.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ImageHelper.COLUMN_HELPFUL, getHelpful(ID) + 1);
+
+        db.update(ImageHelper.TABLE_NAME, contentValues, ImageHelper.COLUMN_ID+" = '"+ID+"'", null );
+    }
+    public void MarkUnhelpful(int ID)
+    {
+        SQLiteDatabase db= helper.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ImageHelper.COLUMN_UNHELPFUL, getUnhelpful(ID) + 1);
+
+        db.update(ImageHelper.TABLE_NAME, contentValues, ImageHelper.COLUMN_ID+" = '"+ID+"'", null );
+    }
+
     //getters
+    public int getHelpful(int uid) //returns -1 on error
+    {
+        SQLiteDatabase db= helper.getWritableDatabase();
+        String[] columns={ImageHelper.COLUMN_HELPFUL};
+        Cursor cursor = db.query(ImageHelper.TABLE_NAME, columns, ImageHelper.COLUMN_ID+" = '"+uid+"'", null, null, null, null);
+        int value = -1;
+        while(cursor.moveToNext()) //this shouldn't ever loop
+        {
+            int cname = cursor.getColumnIndex(ImageHelper.COLUMN_HELPFUL);
+            value = cursor.getInt(cname);
+        }
+        return value;
+    }
+    public int getUnhelpful(int uid) //returns -1 on error
+    {
+        SQLiteDatabase db= helper.getWritableDatabase();
+        String[] columns={ImageHelper.COLUMN_UNHELPFUL};
+        Cursor cursor = db.query(ImageHelper.TABLE_NAME, columns, ImageHelper.COLUMN_ID+" = '"+uid+"'", null, null, null, null);
+        int value = -1;
+        while(cursor.moveToNext()) //this shouldn't ever loop
+        {
+            int cname = cursor.getColumnIndex(ImageHelper.COLUMN_UNHELPFUL);
+            value = cursor.getInt(cname);
+        }
+        return value;
+    }
+
+
+
+
 
     public String getImage(int bathroomID) //Returns author ID and Image Location Text for a given bathroom
     {
