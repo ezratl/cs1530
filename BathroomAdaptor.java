@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.ArrayList;
+
 
 public class BathroomAdaptor
 {
@@ -75,6 +77,72 @@ public class BathroomAdaptor
             output.append(uauthor + " " + ugender + " " + ushower + " " + usink + " " + upapertowels + " " +  uactive + " " + ulocation + " " + uxcord + " " + uycord + " " + ubuildname + " " + ufloor + " " + uhours + " " +  urating + " " + uraters + " " + udate + " " +"\n");
         }
         return output.toString(); //UID LOCATION then next line then UID LOCATION
+
+    }
+
+    public ArrayList getBathroomArray() //Get all the members of a bathroom with a given ID
+    {
+        SQLiteDatabase db = helper.getWritableDatabase();
+        String[] columns = {BathroomHelper.COLUMN_ID, BathroomHelper.COLUMN_AUTHOR, BathroomHelper.COLUMN_GENDER, BathroomHelper.COLUMN_SHOWER, BathroomHelper.COLUMN_SINK, BathroomHelper.COLUMN_PAPERTOWELS,
+                BathroomHelper.COLUMN_ACTIVE, BathroomHelper.COLUMN_LOCATION, BathroomHelper.COLUMN_XCORD, BathroomHelper.COLUMN_YCORD, BathroomHelper.COLUMN_BUILDNAME,
+                BathroomHelper.COLUMN_FLOOR, BathroomHelper.COLUMN_HOURS, BathroomHelper.COLUMN_RATING, BathroomHelper.COLUMN_RATERS, BathroomHelper.COLUMN_DATE};
+        Cursor cursor = db.query(BathroomHelper.TABLE_NAME, columns, null, null, null, null, null);
+        ArrayList output = new ArrayList();
+        BathroomStruct temp;
+        while (cursor.moveToNext()) //this should not loop
+        {
+            int cid = cursor.getColumnIndex(BathroomHelper.COLUMN_ID);
+            int uid = cursor.getInt(cid);
+
+            int cauthor = cursor.getColumnIndex(BathroomHelper.COLUMN_AUTHOR);
+            int uauthor = cursor.getInt(cauthor);
+
+            int cgender = cursor.getColumnIndex(BathroomHelper.COLUMN_GENDER);
+            String ugender = cursor.getString(cgender);
+
+            int cshower = cursor.getColumnIndex(BathroomHelper.COLUMN_SHOWER);
+            int ushower = cursor.getInt(cshower);
+
+            int csink = cursor.getColumnIndex(BathroomHelper.COLUMN_SINK);
+            int usink = cursor.getInt(csink);
+
+            int cpapertowels = cursor.getColumnIndex(BathroomHelper.COLUMN_PAPERTOWELS);
+            int upapertowels = cursor.getInt(cpapertowels);
+
+            int cactive = cursor.getColumnIndex(BathroomHelper.COLUMN_ACTIVE);
+            int uactive = cursor.getInt(cactive);
+
+            int clocation = cursor.getColumnIndex(BathroomHelper.COLUMN_LOCATION);
+            String ulocation = cursor.getString(clocation);
+
+            int cxcord = cursor.getColumnIndex(BathroomHelper.COLUMN_XCORD);
+            double uxcord = cursor.getDouble(cxcord);
+
+            int cycord = cursor.getColumnIndex(BathroomHelper.COLUMN_YCORD);
+            double uycord = cursor.getDouble(cycord);
+
+            int cbuildname = cursor.getColumnIndex(BathroomHelper.COLUMN_BUILDNAME);
+            String ubuildname = cursor.getString(cbuildname);
+
+            int cfloor = cursor.getColumnIndex(BathroomHelper.COLUMN_FLOOR);
+            int ufloor = cursor.getInt(cfloor);
+
+            int chours = cursor.getColumnIndex(BathroomHelper.COLUMN_HOURS);
+            String uhours = cursor.getString(chours);
+
+            int crating = cursor.getColumnIndex(BathroomHelper.COLUMN_RATING);
+            int urating = cursor.getInt(crating);
+
+            int craters = cursor.getColumnIndex(BathroomHelper.COLUMN_RATERS);
+            int uraters = cursor.getInt(craters);
+
+            int cdate = cursor.getColumnIndex(BathroomHelper.COLUMN_DATE);
+            int udate = cursor.getInt(cdate);
+
+            temp = new BathroomStruct(uid, uauthor, ugender, ushower, usink, upapertowels,  uactive, ulocation, uxcord,  uycord,  ubuildname, ufloor, uhours, urating,  uraters, udate);
+            output.add(temp);
+        }
+        return output; //UID LOCATION then next line then UID LOCATION
 
     }
 
