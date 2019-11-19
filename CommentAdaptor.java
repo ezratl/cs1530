@@ -112,7 +112,7 @@ public class CommentAdaptor
         String[] columns={CommentHelper.COLUMN_PARENT,CommentHelper.COLUMN_AUTHOR, CommentHelper.COLUMN_RATING, CommentHelper.COLUMN_DATE, CommentHelper.COLUMN_HELPFUL, CommentHelper.COLUMN_UNHELPFUL, CommentHelper.COLUMN_TEXT};
         Cursor cursor = db.query(CommentHelper.TABLE_NAME, columns, CommentHelper.COLUMN_PARENT+" = '"+bathroomID+"'", null, null, null, null);
         ArrayList output = new ArrayList();
-        Comment temp;
+        CommentStruct temp;
         while(cursor.moveToNext())
         {
             int cparent = cursor.getColumnIndex(CommentHelper.COLUMN_PARENT);
@@ -136,7 +136,7 @@ public class CommentAdaptor
             int ctext = cursor.getColumnIndex(CommentHelper.COLUMN_TEXT);
             String utext = cursor.getString(ctext);
 
-            temp = new Comment(uparent, uauthor, urating, udate, uhelpful, uunhelpful, utext);
+            temp = new CommentStruct(uparent, uauthor, urating, udate, uhelpful, uunhelpful, utext);
             output.add(temp);
 
 
