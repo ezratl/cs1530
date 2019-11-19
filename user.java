@@ -10,6 +10,7 @@ class user
 	private String password;
 	private int mod;
 	private int id;
+	private boolean loggedIn = false;
 	private UserAdaptor database = new UserAdaptor();
 
 	public static void user()
@@ -130,6 +131,13 @@ class user
 		return i;
 	}
 
+	public static boolean getLoginStatus()
+	{
+
+		boolean l = loggedIn;
+		return l;
+	}
+
 	public static boolean checkSignUp(String user, String emailAddress, String pass)
 	{
 
@@ -218,6 +226,7 @@ class user
 			username = user;
 			password = pass;
 			id = idCheck;
+			loggedIn = true;
 			return true;
 
 		}
