@@ -163,6 +163,33 @@ public class BathroomAdaptor
 
     }
 
+    public int getRating(int uid) //returns -1 on error
+    {
+        SQLiteDatabase db= helper.getWritableDatabase();
+        String[] columns={BathroomHelper.COLUMN_RATING};
+        Cursor cursor = db.query(BathroomHelper.TABLE_NAME, columns, BathroomHelper.COLUMN_ID+" = '"+uid+"'", null, null, null, null);
+        int value = -1;
+        while(cursor.moveToNext()) //this shouldn't ever loop
+        {
+            int cname = cursor.getColumnIndex(BathroomHelper.COLUMN_RATING);
+            value = cursor.getInt(cname);
+        }
+        return value;
+    }
+    public int getRaters(int uid) //returns -1 on error
+    {
+        SQLiteDatabase db= helper.getWritableDatabase();
+        String[] columns={BathroomHelper.COLUMN_RATERS};
+        Cursor cursor = db.query(BathroomHelper.TABLE_NAME, columns, BathroomHelper.COLUMN_ID+" = '"+uid+"'", null, null, null, null);
+        int value = -1;
+        while(cursor.moveToNext()) //this shouldn't ever loop
+        {
+            int cname = cursor.getColumnIndex(BathroomHelper.COLUMN_RATERS);
+            value = cursor.getInt(cname);
+        }
+        return value;
+    }
+
     //insert
     public long insertData(int userID, String gender, String address, long xcoord, long ycoord, String name, int floor, String hours, int shower, int sink, int papertowels) //returns ID if successful, is - on failure
     {
@@ -190,6 +217,28 @@ public class BathroomAdaptor
         return db.insert(BathroomAdaptor.BathroomHelper.TABLE_NAME, null, contentValues);
     }
 
+    //modify
+    public void addRating(int uid)
+    {
+        SQLiteDatabase db= helper.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(BathroomHelper.COLUMN_RATING, getRating(uid) + 1);
+
+        db.update(BathroomHelper.TABLE_NAME, contentValues, BathroomHelper.COLUMN_ID+" = '"+uid+"'", null );
+
+    }
+
+    public void addRater(int uid)
+    {
+        SQLiteDatabase db= helper.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(BathroomHelper.COLUMN_RATERS, getRaters(uid) + 1);
+
+        db.update(BathroomHelper.TABLE_NAME, contentValues, BathroomHelper.COLUMN_ID+" = '"+uid+"'", null );
+
+    }
+
+    //delete
     public void deleteBathroom(int ID) //delete bathroom with given ID
     {
         SQLiteDatabase db= helper.getWritableDatabase();
