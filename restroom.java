@@ -1,9 +1,12 @@
+package com.example.pottypoll;
+
 class restroom
 {
 
 	private static final int MAX_FLAGS = 5;
 
-	//private int location[] = {0, 0};	//longitude, latitude
+	private long longitude;
+	private long latitude;
 	private int rating;
 	private int numRatings = 0;
 	private int ratingTotal = 0;
@@ -18,8 +21,10 @@ class restroom
 	private int sink;
 	private int paperTowels;	
 	private int flags = 0;
+	private BathroomAdaptor database = new BathroomAdaptor();
+	private ArrayList<BathroomStruct> restrooms = new ArrayList<BathroomStruct>();
 
-	public void restroom()
+	public static void restroom()
 	{
 
 		userID = 0;
@@ -34,131 +39,153 @@ class restroom
 
 	}
 
-	public void restroom(int userID, String gender, String address, String name, int floor, String hours, int shower, int sink, int pt)
+	public static void restroom(int uID, String g, String a, String n, int f, String h, int sh, int snk, int pt)
 	{
 
-		this.userID = userID;
-		this.gender = gender;
-		this.address = address;
-		this.name = name;
-		this.floor = floor;
-		this.hours = hours;
-		this.shower = shower;
-		this.sink = sink;
+		userID = uID;
+		gender = g;
+		address = a;
+		name = n;
+		floor = f;
+		hours = h;
+		shower = sh;
+		sink = snk;
 		paperTowels = pt;
 
 	}
 
-/*
-	public void setLongitude(int longitude)
+	public static void restroom(int alPos)
 	{
 
-		location[0] = longitude;
+		id = restrooms.get(alPos).ID;
+		gender = restrooms.get(alPos).GENDER;
+		shower = restrooms.get(alPos).SHOWER;
+		sink = restrooms.get(alPos).SINK;
+		paperTowels = restrooms.get(alPos).PAPERTOWELS;
+		floor = restrooms.get(alPos).FLOOR;
+		hours = restrooms.get(alPos).HOURS;
+		rating = restrooms.get(alPos).RATING;		//ask christian how the rating works in bathroom database, or figure it out /shrug
+		ratingTotal = restrooms.get(alPos).RATERS;
+		address = restrooms.get(alPos).LOCATION;
+		latitude = restrooms.get(alPos).XCORD; 
+		longitude = restrooms.get(alPos).YCORD;
 
 	}
 
-	public void setLatitude(int latitude)
+
+	public static void setLongitude(long l)
 	{
 
-		location[1] = latitude;
+		longitude = l;
 
 	}
 
-	public void setLocation(int location[])
+	public static void setLatitude(long l)
 	{
 
-		this.location = location;
+		latitude = l;
+
 	}
-*/
-	public void setRating(int rating)
+
+	public static void setRating(int r)
 	{
 
 		numRatings++;
-		ratingTotal += rating;
-		this.rating = ratingTotal/numRatings;
+		ratingTotal += r;
+		rating = ratingTotal/numRatings;
+		database.addRating(id);
+		database.addRater(id);
 
 	}
 
-	public void setUserID(int userID)
+	public static void setUserID(int uID)
 	{
 
-		this.userID = userID;
+		userID = uID;
 
 	}
 
-	public void setGender(String gender)
+	public static void setGender(String g)
 	{
 
-		this.gender =  gender;
+		gender =  g;
 
 	}
 
-	public void setAddress(String address)
+	public static void setAddress(String a)
 	{
 
-		this.address = address;
+		address = a;
 
 	}
 
-	public void setName(String name)
+	public static void setName(String n)
 	{
 
-		this.name = name;
+		name = n;
 
 	}
 
-	public void setFloor(int floor)
+	public static void setFloor(int f)
 	{
 
-		this.floor = floor;
+		floor = f;
 
 	}
 
-	public void setHours(String hours)
+	public static void setHours(String h)
 	{
 
-		this.hours = hours;
+		hours = h;
 
 	}
 
-	public void setShower(int shower)
+	public static void setShower(int s)
 	{
 
-		this.shower = shower;
+		shower = s;
 
 	}
 
-	public void setSink(int sink)
+	public static void setSink(int s)
 	{
 
-		this.sink = sink;
+		sink = s;
 
 	}
 
-	public void setPT(int paperTowels)
+	public static void setPT(int pt)
 	{
 
-		this.paperTowels = paperTowels;
+		paperTowels = pt;
+
 	}
 
-/*
-	public int[] getLocation()
+	public static long getLongitude()
 	{
 
-		int l[] = location;
-		return location;
+		long l = longitude;
+		return l;
 
 	}
-*/
-	public double getRating()
+
+	public static long getLatitude()
 	{
 
-		double r = rating;
+		long l = latitude;
+		return l;
+
+	}
+
+	public static int getRating()
+	{
+
+		int r = rating;
 		return r;
 
 	}
 
-	public int getUserID()
+	public static int getUserID()
 	{
 
 		int uid = userID;
@@ -166,7 +193,7 @@ class restroom
 
 	}
 
-	public String getGender()
+	public static String getGender()
 	{
 
 		String g = gender;
@@ -174,7 +201,7 @@ class restroom
 
 	}
 
-	public String getAddress()
+	public static String getAddress()
 	{
 
 		String a = address;
@@ -182,7 +209,7 @@ class restroom
 
 	}
 
-	public String getName()
+	public static String getName()
 	{
 
 		String n = name;
@@ -190,7 +217,7 @@ class restroom
 
 	}
 
-	public int getFloor()
+	public static int getFloor()
 	{
 
 		int f = floor;
@@ -198,7 +225,7 @@ class restroom
 
 	}
 
-	public String getHours()
+	public static String getHours()
 	{
 
 		String h = hours;
@@ -206,7 +233,7 @@ class restroom
 
 	}
 
-	public int getShower()
+	public static int getShower()
 	{
 
 		int s = shower;
@@ -214,7 +241,7 @@ class restroom
 
 	}
 
-	public int getSink()
+	public static int getSink()
 	{
 
 		int s = sink;
@@ -222,7 +249,7 @@ class restroom
 
 	}
 
-	public int getPT()
+	public static int getPT()
 	{
 
 		int pt = paperTowels;
@@ -230,7 +257,7 @@ class restroom
 
 	}
 
-	public BathroomAdaptor addRestroom(BathroomAdaptor database)
+	public static boolean addRestroom(BathroomAdaptor database)
 	{
 
 		id = (int)database.insertData(userID, gender, address, name, floor, hours, shower, sink, paperTowels);
@@ -238,25 +265,25 @@ class restroom
 		if(id < 0)
 		{
 
-			System.out.println("Failed to add restroom to database.");
+			return false;
 
 		}
 
-		return database;
+		return true;
 
 	}
 
-	public BathroomAdaptor addRestroom(int userID, String gender, String address, String name, int floor, String hours, int shower, int sink, int pt, BathroomAdaptor database)
+	public static boolean addRestroom(int uID, String g, String a, String n, int f, String h, int sh, int snk, int pt)
 	{
 
-		this.userID = userID;
-		this.gender = gender;
-		this.address = address;
-		this.name = name;
-		this.floor = floor;
-		this.hours = hours;
-		this.shower = shower;
-		this.sink = sink;
+		userID = uID;
+		gender = g;
+		address = a;
+		name = n;
+		floor = f;
+		hours = h;
+		shower = sh;
+		sink = snk;
 		paperTowels = pt;
 
 		id = (int)database.insertData(userID, gender, address, name, floor, hours, shower, sink, paperTowels);
@@ -264,15 +291,36 @@ class restroom
 		if(id < 0)
 		{
 
-			System.out.println("Failed to add restroom to database.");
+			return false;
 
 		}
 
-		return database;
+		return true;
 
 	}
 
-	public void addFlag()
+	public static ArrayList getRestrooms(long lng, long lat)
+	{
+
+		restrooms = database.getBathroomArray();
+
+		for(int i = 0; i < restrooms.size; i++)
+		{
+
+			if(restrooms.get(i).XCORD == lat || restrooms.get(i).YCORD == lng)
+			{
+
+				restrooms.remove(i);
+
+			}
+
+		}
+
+		return restrooms;
+
+	}
+
+	public static void addFlag()
 	{
 
 		flags++;
@@ -280,13 +328,13 @@ class restroom
 
 	}
 
-	private void checkFlags()
+	private static void checkFlags()
 	{
 
 		if(flags >= MAX_FLAGS)
 		{
 
-			//remove the restroom
+			database.deleteBathroom(id);
 
 		}
 

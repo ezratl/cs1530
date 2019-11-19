@@ -1,3 +1,5 @@
+package com.example.pottypoll;
+
 class comment
 {
 	private static final int MAX_FLAGS = 5;
@@ -10,8 +12,12 @@ class comment
 	private int id;
 	private int userID;
 	private int bathroomID;
+	private int helpful = 0;
+	private int unhelpful = 0;
+	private CommentAdaptor database = new CommentAdaptor();
+	private ArrayList<CommentStruct> comments = new ArrayList<CommentStruct>();
 
-	public void comment()
+	public static void comment()
 	{
 
 		comment = 0;
@@ -21,45 +27,57 @@ class comment
 
 	}
 
-	public void comment(String comment, int rating, int userID, int bathroomID)
+	public static void comment(String cmnt, int r, int uID, int bID)
 	{
 
-		this.comment = comment;
-		this.rating = rating;
-		this.userID = userID;
-		this.bathroomID = bathroomID;
+		comment = cmnt;
+		rating = r;
+		userID = uID;
+		bathroomID = bID;
 
 	}
 
-	public void setComment(String shitpost)
+	public static void comment(int alPos)
+	{
+
+		comment = comments.get(alPos).TEXT;
+		rating = comments.get(alPos).RATING;
+		userID = comments.get(alPos).AUTHOR;
+		bathroomID = comments.get(alPos).PARENT;
+		helpful = comments.get(alPos).HELPFUL;
+		unhelpful = comments.get(alPos).UNHELPFUL;
+
+	}
+
+	public static void setComment(String shitpost)
 	{
 
 		comment = shitpost;
 
 	}
 
-	public void setRating(int rating)
+	public static void setRating(int r)
 	{
 
-		numRatings++;
-		ratingTotal += rating;
-		this.rating = ratingTotal/numRatings;
+		rating = r;
 
 	}
 
-	public void setUserID(int userID)
+	public static void setUserID(int uID)
 	{
 
-		this.userID = userID;
+		userID = uID;
+	
 	}
 
-	public void setBathroomID(int bathroomID)
+	public static void setBathroomID(int bID)
 	{
 
-		this.bathroomID = bathroomID;
+		bathroomID = bID;
+
 	}
 
-	public String getComment()
+	public static String getComment()
 	{
 
 		String c = comment;
@@ -67,7 +85,7 @@ class comment
 
 	}
 
-	public double getRating()
+	public static double getRating()
 	{
 
 		double r = rating;
@@ -75,7 +93,7 @@ class comment
 
 	}
 
-	public int getUserID()
+	public static int getUserID()
 	{
 
 		int i = userID;
@@ -83,7 +101,7 @@ class comment
 
 	}
 
-	public int getBathroomID()
+	public static int getBathroomID()
 	{
 
 		int i = bathroomID;
@@ -91,14 +109,54 @@ class comment
 
 	}
 
-	public int getID()
+	public static int getID()
 	{
 
 		int i = id;
 		return i;
 	}
 
-	public void addComment(CommentAdaptor database)
+	public static void setHelpful()
+	{
+
+		helpful++;
+		database.MarkHelpful(id);
+
+	}
+
+	public static void setUnhelpful()
+	{
+
+		unhelpful++;
+		database.MarkUnhelpful(id);
+
+	}
+
+	public static int getHelpful()
+	{
+
+		int h = helpful;
+		return helpful;
+
+	}
+
+	public static int getUnhelpful()
+	{
+
+		int uh = unhelpful;
+		return uh;
+
+	}
+
+	public static ArrayList getCommentsForBathroom()
+	{
+
+		comments = database.getCommentArray(bathroomID);
+		return comments;
+
+	}
+
+	public static boolean addComment()
 	{
 
 		id = (int)database.insertData(bathroomID, userID, rating, comment);
@@ -106,15 +164,15 @@ class comment
 		if(id < 0)
 		{
 
-			System.out.println("Failed to add comment to database.");
+			return false;
 
 		}
 
-		return database;
+		return true;
 
 	}
 
-	public void addComment(int bID, int uID, int r, String cmt, CommentAdaptor database)
+	public static boolean addComment(int bID, int uID, int r, String cmt)
 	{
 
 		comment = cmt;
@@ -127,23 +185,23 @@ class comment
 		if(id < 0)
 		{
 
-			System.out.println("Failed to add comment to database.");
+			return false;
 
 		}
 
-		return database;
+		return true;
 
 	}
 
-	public void addFlag(CommentAdaptor database)
+	public static void addFlag()
 	{
 
 		flags++;
-		checkFlags(database);
+		checkFlags();
 
 	}
 
-	private void checkFlags(CommentAdaptor database)
+	private static void checkFlags()
 	{
 
 		if(flags >= MAX_FLAGS)
