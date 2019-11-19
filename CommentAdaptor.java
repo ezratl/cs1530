@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.ArrayList;
+
 
 public class CommentAdaptor
 {
@@ -103,6 +105,46 @@ public class CommentAdaptor
         return output.toString();
 
     }
+
+    public ArrayList getCommentArray(int bathroomID) //Returns Comment Array for a given bathroom
+    {
+        SQLiteDatabase db= helper.getWritableDatabase();
+        String[] columns={CommentHelper.COLUMN_PARENT,CommentHelper.COLUMN_AUTHOR, CommentHelper.COLUMN_RATING, CommentHelper.COLUMN_DATE, CommentHelper.COLUMN_HELPFUL, CommentHelper.COLUMN_UNHELPFUL, CommentHelper.COLUMN_TEXT};
+        Cursor cursor = db.query(CommentHelper.TABLE_NAME, columns, CommentHelper.COLUMN_PARENT+" = '"+bathroomID+"'", null, null, null, null);
+        ArrayList output = new ArrayList();
+        Comment temp;
+        while(cursor.moveToNext())
+        {
+            int cparent = cursor.getColumnIndex(CommentHelper.COLUMN_PARENT);
+            int uparent = cursor.getInt(cparent);
+
+            int cauthor = cursor.getColumnIndex(CommentHelper.COLUMN_AUTHOR);
+            int uauthor = cursor.getInt(cauthor);
+
+            int crating = cursor.getColumnIndex(CommentHelper.COLUMN_RATING);
+            int urating = cursor.getInt(crating);
+
+            int cdate = cursor.getColumnIndex(CommentHelper.COLUMN_DATE);
+            int udate = cursor.getInt(cdate);
+
+            int chelpful = cursor.getColumnIndex(CommentHelper.COLUMN_HELPFUL);
+            int uhelpful = cursor.getInt(chelpful);
+
+            int cunhelpful = cursor.getColumnIndex(CommentHelper.COLUMN_UNHELPFUL);
+            int uunhelpful = cursor.getInt(cunhelpful);
+
+            int ctext = cursor.getColumnIndex(CommentHelper.COLUMN_TEXT);
+            String utext = cursor.getString(ctext);
+
+            temp = new Comment(uparent, uauthor, urating, udate, uhelpful, uunhelpful, utext);
+            output.add(temp);
+
+
+        }
+        return output;
+
+    }
+
     static class CommentHelper extends SQLiteOpenHelper
     {
         private static final int DATABASE_VERSION = 1;
