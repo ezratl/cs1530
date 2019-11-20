@@ -186,7 +186,7 @@ class user
 	public boolean addUserToDatabase(String user, String emailAddress, String pass, int m)
 	{
 
-		if(database.getPassword(user).length() > 0 ||database.getPassword(user) != null)
+		if(database.getPassword(user).length() <= 0 || database.getPassword(user) == null)
 		{
 
 			return false;
