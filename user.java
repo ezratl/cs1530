@@ -1,40 +1,44 @@
 package com.example.pottypoll;
-import java.io.*; 
+
+import androidx.test.core.app.ApplicationProvider;
+import java.io.*;
+
 import java.util.*;
 
-class user
+public class user
 {
-	
+
 	private long longitude;
 	private long latitude;
 	private String username;
 	private String email;
-	private String password;
 	private int mod;
 	private int id;
-	private boolean loggedIn = false;
-	private UserAdaptor database = new UserAdaptor();;
 
-	public void user()
+	private boolean loggedIn;
+	private UserAdaptor database;
+
+	public user()
 	{
 
 		username = "";
 		email = "";
-		password = "";
 		longitude = -1;
 		latitude = -1;
 		mod = 0;
-
+		loggedIn = false;
+		database = new UserAdaptor(ApplicationProvider.getApplicationContext());
 	}
 
-	public void user(String un, String e, String p, int m)
+
+	public user(String un, String e, int m)
 	{
 
 		username = un;
 		email = e;
-		password = p;
 		mod = m;
-
+		loggedIn = false;
+		database = new UserAdaptor(ApplicationProvider.getApplicationContext());
 	}
 
 	public void setLongitude(long l)
@@ -58,13 +62,6 @@ class user
 
 	}
 
-	public void setPassword(String password)
-	{
-
-		this.password = password;
-
-	}
-
 	public void setEmail(String email)
 	{
 
@@ -83,7 +80,7 @@ class user
 
 		long l = longitude;
 		return l;
-		
+
 	}
 
 	public long getLatitude()
@@ -99,14 +96,6 @@ class user
 
 		String u = username;
 		return u;
-
-	}
-
-	public String getPassword()
-	{
-
-		String p = password;
-		return p;
 
 	}
 
@@ -156,7 +145,6 @@ class user
 			//save values
 			username = user;
 			email = emailAddress;
-			password = pass;
 
 			return true;
 
@@ -166,11 +154,11 @@ class user
 
 	}
 
-	public boolean addUserToDatabase()
+
+	public boolean addUserToDatabase(String password)
 	{
-
-		database = new UserAdaptor(ApplicationProvider.getApplicationContext());
-
+		//database = new UserAdaptor(ApplicationProvider.getApplicationContext());
+		if(database.getPassword(username).length() > 0)
 		if(!validEmail(emailAddress))
 		{
 
@@ -180,7 +168,6 @@ class user
 
 		if(database.getPassword(username).length() > 0 ||database.getPassword(username) != null)
 		{
-
 			return false;
 
 		}
@@ -194,10 +181,9 @@ class user
 		}
 
 		id = (int)database.insertData(username, password, email, mod);
-		
+
 		if(id < 0)
 		{
-
 			return false;
 
 		}
@@ -209,42 +195,27 @@ class user
 	public boolean addUserToDatabase(String user, String emailAddress, String pass, int m)
 	{
 
-		database = new UserAdaptor(ApplicationProvider.getApplicationContext());
 
-		if(!validEmail(emailAddress))
+		//database = new UserAdaptor(ApplicationProvider.getApplicationContext());
+		//System.out.println("len = " + database.getPassword(username).length());
+		if(user==null || emailAddress==null || pass==null ||
+				!validEmail(emailAddress) || database.getPassword(username).length() > 0)
 		{
-
 			return false;
 
 		}
-
-		if(database.getPassword(user).length() > 0 || database.getPassword(user) != null)
-		{
-
-			return false;
-
-		}
-
-		if(!checkForNulls(user, emailAddress, pass, m))
-		{
-
-			return false;
-
-		}
-
-		username = user;
-		email = emailAddress;
-		password = pass;
-		mod = m;
 
 		id = (int)database.insertData(user, pass, emailAddress, m);
-		
+
 		if(id < 0)
 		{
 
 			return false;
 
 		}
+		username = user;
+		email = emailAddress;
+		mod = m;
 
 		return true;
 
@@ -253,12 +224,15 @@ class user
 	public boolean logIn(String user, String pass)
 	{
 
-		database = new UserAdaptor(ApplicationProvider.getApplicationContext());
+		if(user==null || pass==null)
+		{
+			return false;
+		}
 		int idCheck = database.getID(user, pass);
 
 		if(idCheck < 0)
 		{
-
+			//System.out.println("id = " + idCheck);
 			return false;
 
 		}
@@ -266,15 +240,23 @@ class user
 		{
 
 			username = user;
-			password = pass;
 			id = idCheck;
 			loggedIn = true;
 			return true;
 
 		}
 
-		return false;
+		//return false;
 
+	}
+
+	public void logout ()
+	{
+		loggedIn = false;
+		username = "";
+		email = "";
+		mod = 0;
+		loggedIn = false;
 	}
 
 	private boolean validEmail(String given)
@@ -284,7 +266,7 @@ class user
 		int atSign = given.indexOf('@');
 		int dotSign = given.indexOf('.');
 
-		if(atSign < dotSign && dotSign == (size - 3))
+		if(atSign < dotSign && dotSign == (size - 4))
 		{
 
 			return true;

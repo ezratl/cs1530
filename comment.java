@@ -1,42 +1,50 @@
 package com.example.pottypoll;
+
+import androidx.test.core.app.ApplicationProvider;
 import java.io.*; 
 import java.util.*;
 
-class comment
+
+import java.io.*;
+import java.util.*;
+
+public class comment
 {
 	private static final int MAX_FLAGS = 5;
-/*
-	private String comment;
-	private int rating;
-	private int numRatings = 0;
-	private int ratingTotal = 0;
-	private int flags = 0;
-	private int id;
-	private int userID;
-	private int bathroomID;
-	private int helpful = 0;
-	private int unhelpful = 0;
-*/
-	private CommentStruct current; 
+
+	/*
+        private String comment;
+        private int rating;
+        private int numRatings = 0;
+        private int ratingTotal = 0;
+        private int flags = 0;
+        private int id;
+        private int userID;
+        private int bathroomID;
+        private int helpful = 0;
+        private int unhelpful = 0;
+    */
+	private CommentStruct current;
 	private int currentID;
-	private CommentAdaptor database = new CommentAdaptor();
+	private CommentAdaptor database = new CommentAdaptor(ApplicationProvider.getApplicationContext());
 	private ArrayList<CommentStruct> comments = new ArrayList<CommentStruct>();
 
-	public void comment()
+	public comment()
 	{
 
 		current = new CommentStruct(0, 0, 0, 0, 0, 0, "");
 
 	}
 
-	public void comment(String comment, int rating, int userID, int bathroomID, int date, int helpful, int unhelpful)
+	public comment(String comment, int rating, int userID, int bathroomID, int date, int helpful, int unhelpful)
+
 	{
 
 		current = new CommentStruct(bathroomID, userID, rating, date, helpful, unhelpful, comment);
 
 	}
 
-	public void comment(int alPos)
+	public comment(int alPos)
 	{
 
 		current = comments.get(alPos);
@@ -61,7 +69,6 @@ class comment
 	{
 
 		current.AUTHOR = userID;
-	
 	}
 
 	public void setBathroomID(int bathroomID)
@@ -112,8 +119,6 @@ class comment
 
 	public void setHelpful()
 	{
-
-		database = new UserAdaptor(ApplicationProvider.getApplicationContext());
 		current.HELPFUL++;
 		database.MarkHelpful(currentID);
 
@@ -122,7 +127,6 @@ class comment
 	public void setUnhelpful()
 	{
 
-		database = new UserAdaptor(ApplicationProvider.getApplicationContext());
 		current.UNHELPFUL++;
 		database.MarkUnhelpful(currentID);
 		checkFlags();
@@ -147,8 +151,6 @@ class comment
 
 	public ArrayList getCommentsForBathroom()
 	{
-
-		database = new UserAdaptor(ApplicationProvider.getApplicationContext());
 		comments = database.getCommentArray(current.PARENT);
 		return comments;
 
@@ -157,16 +159,12 @@ class comment
 	public ArrayList getCommentsForBathroom(int bathroomID)
 	{
 
-		database = new UserAdaptor(ApplicationProvider.getApplicationContext());
 		comments = database.getCommentArray(bathroomID);
-
+		return comments;
 	}
 
 	public boolean addComment()
 	{
-
-		database = new UserAdaptor(ApplicationProvider.getApplicationContext());
-
 		if(!checkForNulls(current.PARENT, current.AUTHOR, current.RATING, current.TEXT))
 		{
 
@@ -189,8 +187,8 @@ class comment
 
 	public boolean addComment(int bID, int uID, int r, String cmt)
 	{
-
-		database = new UserAdaptor(ApplicationProvider.getApplicationContext());
+		if (r<0 || r>5)
+			return false;
 
 		if(!checkForNulls(bID, uID, r, cmt))
 		{
@@ -200,21 +198,27 @@ class comment
 		}
 
 		currentID = (int)database.insertData(bID, uID, r, cmt);
+
+		if(currentID < 0)
+		{
+			return false;
+		}
+
 		current.PARENT = bID;
 		current.AUTHOR = uID;
 		current.RATING = r;
 		current.TEXT = cmt;
 
-		if(currentID < 0)
-		{
-
-			return false;
-
-		}
-
 		return true;
 
 	}
+  
+	public void deleteComment()
+  {
+		database.deleteComment(currentID);
+		current = new CommentStruct(0, 0, 0, 0, 0, 0, "");
+	}
+
 
 	public boolean editComment(int bathroomID, int userID, int rating, String edits, int commentID)
 	{
@@ -245,27 +249,21 @@ class comment
 		return true;		
 
 	}
-/*
-	public void addFlag()
-	{
+	
 
-		flags++;
-		checkFlags();
+   public void addFlag()
+   {
+       flags++;
+       checkFlags();
+   }
 
-	}
-*/
 	private void checkFlags()
 	{
 
-		database = new UserAdaptor(ApplicationProvider.getApplicationContext());
 		if(database.getUnhelpful(currentID) >= MAX_FLAGS)
 		{
 
 			database.deleteComment(currentID);
-			
-		}
-
-	}
 
 	private boolean checkForNulls(int bID, int uID, int r, String cmt)
 	{
@@ -280,9 +278,7 @@ class comment
 
 		if(r < 0 || r > 5)
 		{
-
 			return false;
-			
 		}
 
 		return true;
