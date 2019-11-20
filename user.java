@@ -1,4 +1,6 @@
 package com.example.pottypoll;
+import java.io.*; 
+import java.util.*;
 
 class user
 {
@@ -13,19 +15,19 @@ class user
 	private boolean loggedIn = false;
 	private UserAdaptor database = new UserAdaptor();
 
-	public static void user()
+	public void user()
 	{
 
 		username = "";
 		email = "";
 		password = "";
-		location[0] = -1;
-		location[1] = -1;
+		longitude = -1;
+		latitude = -1;
 		mod = 0;
 
 	}
 
-	public static void user(String un, String e, String p, int m)
+	public void user(String un, String e, String p, int m)
 	{
 
 		username = un;
@@ -35,48 +37,48 @@ class user
 
 	}
 
-	public static void setLongitude(long l)
+	public void setLongitude(long l)
 	{
 
 		longitude = l;
 
 	}
 
-	public static void setLatitude(long l)
+	public void setLatitude(long l)
 	{
 
 		latitude = l;
 
 	}
 
-	public static void setUsername(String username)
+	public void setUsername(String username)
 	{
 
 		this.username = username;
 
 	}
 
-	public static void setPassword(String password)
+	public void setPassword(String password)
 	{
 
 		this.password = password;
 
 	}
 
-	public static void setEmail(String email)
+	public void setEmail(String email)
 	{
 
 		this.email = email;
 	}
 
-	public static void setMod(int mod)
+	public void setMod(int mod)
 	{
 
 		this.mod = mod;
 
 	}
 
-	public static long getLongitude()
+	public long getLongitude()
 	{
 
 		long l = longitude;
@@ -84,7 +86,7 @@ class user
 		
 	}
 
-	public static long getLatitude()
+	public long getLatitude()
 	{
 
 		long l = latitude;
@@ -92,7 +94,7 @@ class user
 
 	}
 
-	public static String getUsername()
+	public String getUsername()
 	{
 
 		String u = username;
@@ -100,15 +102,15 @@ class user
 
 	}
 
-	public static String getPassword()
+	public String getPassword()
 	{
 
-		int p = password;
+		String p = password;
 		return p;
 
 	}
 
-	public static String getEmail()
+	public String getEmail()
 	{
 
 		String e = email;
@@ -116,7 +118,7 @@ class user
 
 	}
 
-	public static int getMod()
+	public int getMod()
 	{
 
 		int m = mod;
@@ -124,21 +126,21 @@ class user
 
 	}
 
-	public static int getID()
+	public int getID()
 	{
 
 		int i = id;
 		return i;
 	}
 
-	public static boolean getLoginStatus()
+	public boolean getLoginStatus()
 	{
 
 		boolean l = loggedIn;
 		return l;
 	}
 
-	public static boolean checkSignUp(String user, String emailAddress, String pass)
+	public boolean checkSignUp(String user, String emailAddress, String pass)
 	{
 
 		//if email is a valid email address
@@ -158,7 +160,7 @@ class user
 
 	}
 
-	public static boolean addUserToDatabase()
+	public boolean addUserToDatabase()
 	{
 
 		if(database.getPassword(username).length() > 0 ||database.getPassword(username) != null)
@@ -181,7 +183,7 @@ class user
 
 	}
 
-	public static boolean addUserToDatabase(String user, String emailAddress, String pass, int m)
+	public boolean addUserToDatabase(String user, String emailAddress, String pass, int m)
 	{
 
 		if(database.getPassword(user).length() > 0 ||database.getPassword(user) != null)
@@ -209,10 +211,10 @@ class user
 
 	}
 
-	public static boolean logIn(String user, String pass)
+	public boolean logIn(String user, String pass)
 	{
 
-		int id = database.getID(user, pass);
+		int idCheck = database.getID(user, pass);
 
 		if(idCheck < 0)
 		{
@@ -235,7 +237,7 @@ class user
 
 	}
 
-	private static boolean validEmail(String given)
+	private boolean validEmail(String given)
 	{
 
 		int size = given.length();

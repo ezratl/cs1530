@@ -1,15 +1,19 @@
 package com.example.pottypoll;
+import java.io.*; 
+import java.util.*;
 
 class restroom
 {
 
 	private static final int MAX_FLAGS = 5;
-
+/*
 	private long longitude;
 	private long latitude;
+*/	
 	private int rating;
-	private int numRatings = 0;
+	//private int numRatings = 0;
 	private int ratingTotal = 0;
+/*	
 	private int id;
 	private int userID;
 	private String gender;
@@ -20,249 +24,226 @@ class restroom
 	private int shower;
 	private int sink;
 	private int paperTowels;	
+*/
 	private int flags = 0;
+	private BathroomStruct current;	
+	private int currentID;
 	private BathroomAdaptor database = new BathroomAdaptor();
 	private ArrayList<BathroomStruct> restrooms = new ArrayList<BathroomStruct>();
 
-	public static void restroom()
+	public  void restroom()
 	{
 
-		userID = 0;
-		gender = "";
-		address = "";
-		name = "";
-		floor = 0;
-		hours = "";
-		shower = 0;
-		sink = 0;
-		paperTowels = 0;
+		current = new BathroomStruct(0, 0, "", 0, 0, 0, 0, "", 0, 0, "", 0, 0, 0, 0, 0);
 
 	}
 
-	public static void restroom(int uID, String g, String a, String n, int f, String h, int sh, int snk, int pt)
+	public  void restroom(int id, int author, String gender, int shower, int sink, int papertowels, int active, String location, double x, double y, String building, int floor, String hours, int rating, int raters, int date)
 	{
 
-		userID = uID;
-		gender = g;
-		address = a;
-		name = n;
-		floor = f;
-		hours = h;
-		shower = sh;
-		sink = snk;
-		paperTowels = pt;
+		current = new BathroomStruct(id, author, gender, shower, sink, papertowels, active, location, x, y, building, floor, hours, rating, raters, date);
 
 	}
 
-	public static void restroom(int alPos)
+	public  void restroom(int alPos)
 	{
 
-		id = restrooms.get(alPos).ID;
-		gender = restrooms.get(alPos).GENDER;
-		shower = restrooms.get(alPos).SHOWER;
-		sink = restrooms.get(alPos).SINK;
-		paperTowels = restrooms.get(alPos).PAPERTOWELS;
-		floor = restrooms.get(alPos).FLOOR;
-		hours = restrooms.get(alPos).HOURS;
-		rating = restrooms.get(alPos).RATING;		//ask christian how the rating works in bathroom database, or figure it out /shrug
-		ratingTotal = restrooms.get(alPos).RATERS;
-		address = restrooms.get(alPos).LOCATION;
-		latitude = restrooms.get(alPos).XCORD; 
-		longitude = restrooms.get(alPos).YCORD;
+		current = restrooms.get(alPos);
 
 	}
 
 
-	public static void setLongitude(long l)
+	public  void setX(long l)
 	{
 
-		longitude = l;
+		current.XCORD = l;
 
 	}
 
-	public static void setLatitude(long l)
+	public  void setY(long l)
 	{
 
-		latitude = l;
+		current.YCORD = l;
 
 	}
 
-	public static void setRating(int r)
+	public  void setRating(int r)
 	{
 
-		numRatings++;
+		current.RATERS++;
 		ratingTotal += r;
-		rating = ratingTotal/numRatings;
-		database.addRating(id);
-		database.addRater(id);
+		rating = ratingTotal/current.RATERS;
+		current.RATING = rating;
+		database.addRating(currentID);
+		database.addRater(currentID);
 
 	}
 
-	public static void setUserID(int uID)
+	public void setUserID(int uID)
 	{
 
-		userID = uID;
+		current.AUTHOR = uID;
 
 	}
 
-	public static void setGender(String g)
+	public void setGender(String g)
 	{
 
-		gender =  g;
+		current.GENDER = g;
 
 	}
 
-	public static void setAddress(String a)
+	public void setAddress(String a)
 	{
 
-		address = a;
+		current.BUILDNAME = a;
 
 	}
 
-	public static void setName(String n)
+	public void setName(String n)
 	{
 
-		name = n;
+		current.LOCATION = n;
 
 	}
 
-	public static void setFloor(int f)
+	public void setFloor(int f)
 	{
 
-		floor = f;
+		current.FLOOR = f;
 
 	}
 
-	public static void setHours(String h)
+	public void setHours(String h)
 	{
 
-		hours = h;
+		current.HOURS = h;
 
 	}
 
-	public static void setShower(int s)
+	public void setShower(int s)
 	{
 
-		shower = s;
+		current.SHOWER = s;
 
 	}
 
-	public static void setSink(int s)
+	public void setSink(int s)
 	{
 
-		sink = s;
+		current.SINK = s;
 
 	}
 
-	public static void setPT(int pt)
+	public void setPT(int pt)
 	{
 
-		paperTowels = pt;
+		current.PAPERTOWELS = pt;
 
 	}
 
-	public static long getLongitude()
+	public long getX()
 	{
 
-		long l = longitude;
+		long l = current.XCORD;
 		return l;
 
 	}
 
-	public static long getLatitude()
+	public long getY()
 	{
 
-		long l = latitude;
+		long l = current.YCORD;
 		return l;
 
 	}
 
-	public static int getRating()
+	public int getRating()
 	{
 
-		int r = rating;
+		int r = current.RATING;
 		return r;
 
 	}
 
-	public static int getUserID()
+	public int getUserID()
 	{
 
-		int uid = userID;
+		int uid = current.AUTHOR;
 		return uid;
 
 	}
 
-	public static String getGender()
+	public String getGender()
 	{
 
-		String g = gender;
+		String g = current.GENDER;
 		return g;
 
 	}
 
-	public static String getAddress()
+	public String getAddress()
 	{
 
-		String a = address;
+		String a = current.BUILDNAME;
 		return a;
 
 	}
 
-	public static String getName()
+	public String getName()
 	{
 
-		String n = name;
+		String n = current.LOCATION;
 		return n;
 
 	}
 
-	public static int getFloor()
+	public int getFloor()
 	{
 
-		int f = floor;
+		int f = current.FLOOR;
 		return f;
 
 	}
 
-	public static String getHours()
+	public String getHours()
 	{
 
-		String h = hours;
+		String h = current.HOURS;
 		return h;
 
 	}
 
-	public static int getShower()
+	public int getShower()
 	{
 
-		int s = shower;
+		int s = current.SHOWER;
 		return s;
 
 	}
 
-	public static int getSink()
+	public int getSink()
 	{
 
-		int s = sink;
+		int s = current.SINK;
 		return s;
 
 	}
 
-	public static int getPT()
+	public int getPT()
 	{
 
-		int pt = paperTowels;
+		int pt = current.PAPERTOWELS;
 		return pt;
 
 	}
 
-	public static boolean addRestroom(BathroomAdaptor database)
+	public boolean addRestroom()
 	{
 
-		id = (int)database.insertData(userID, gender, address, name, floor, hours, shower, sink, paperTowels);
+		currentID = (int)database.insertData(current.AUTHOR, current.GENDER, current.BUILDNAME, current.XCORD, current.YCORD, current.LOCATION, current.FLOOR, current.HOURS, current.SHOWER, current.SINK, current.PAPERTOWELS);
 
-		if(id < 0)
+		if(currentID < 0)
 		{
 
 			return false;
@@ -273,22 +254,23 @@ class restroom
 
 	}
 
-	public static boolean addRestroom(int uID, String g, String a, String n, int f, String h, int sh, int snk, int pt)
+	public boolean addRestroom(int userID, String gender, String address, long xcoord, long ycoord, String name, int floor, String hours, int shower, int sink, int papertowels)
 	{
 
-		userID = uID;
-		gender = g;
-		address = a;
-		name = n;
-		floor = f;
-		hours = h;
-		shower = sh;
-		sink = snk;
-		paperTowels = pt;
+		currentID = (int)database.insertData(userID, gender, address, xcoord, ycoord, name, floor, hours, shower, sink, papertowels);
+		current.AUTHOR = userID;
+		current.GENDER = gender;
+		current.BUILDNAME = address;
+		current.XCORD = xcoord;
+		current.YCORD = ycoord;
+		current.LOCATION = name;
+		current.FLOOR = floor;
+		current.HOURS = hours;
+		current.SHOWER = shower;
+		current.SINK = sink;
+		current.PAPERTOWELS = papertowels;
 
-		id = (int)database.insertData(userID, gender, address, name, floor, hours, shower, sink, paperTowels);
-
-		if(id < 0)
+		if(currentID < 0)
 		{
 
 			return false;
@@ -299,7 +281,7 @@ class restroom
 
 	}
 
-	public static ArrayList getRestrooms(long lng, long lat)
+	public ArrayList getRestrooms(long lng, long lat)
 	{
 
 		restrooms = database.getBathroomArray();
@@ -320,7 +302,7 @@ class restroom
 
 	}
 
-	public static void addFlag()
+	public void addFlag()
 	{
 
 		flags++;
@@ -328,13 +310,13 @@ class restroom
 
 	}
 
-	private static void checkFlags()
+	private void checkFlags()
 	{
 
 		if(flags >= MAX_FLAGS)
 		{
 
-			database.deleteBathroom(id);
+			database.deleteBathroom(currentID);
 
 		}
 
