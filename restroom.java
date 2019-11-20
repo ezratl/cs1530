@@ -1,5 +1,9 @@
 package com.example.pottypoll;
+
 import androidx.test.core.app.ApplicationProvider;
+import java.io.*; 
+import java.util.*;
+
 
 import java.io.*;
 import java.util.*;
@@ -55,6 +59,7 @@ public class restroom
 	}
 
 
+
 	public  void setX(double l)
 	{
 
@@ -71,7 +76,6 @@ public class restroom
 
 	public  void setRating(int r)
 	{
-		//database = new BathroomAdaptor(ApplicationProvider.getApplicationContext());
 		current.RATERS++;
 		ratingTotal += r;
 		rating = ratingTotal/current.RATERS;
@@ -144,6 +148,7 @@ public class restroom
 
 	}
 
+
 	public double getX()
 	{
 
@@ -152,12 +157,12 @@ public class restroom
 
 	}
 
+
 	public double getY()
 	{
 
 		double l = current.YCORD;
 		return l;
-
 	}
 
 	public int getRating()
@@ -240,14 +245,23 @@ public class restroom
 
 	}
 
+
 	public int getID() {
 		return currentID;
 	}
 
 	public boolean addRestroom()
 	{
-		//database = new BathroomAdaptor(ApplicationProvider.getApplicationContext());
+
+		if(!checkForNulls(current.AUTHOR, current.GENDER, current.BUILDNAME, current.XCORD, current.YCORD, current.LOCATION, current.FLOOR, current.HOURS, current.SHOWER, current.SINK, current.PAPERTOWELS))
+		{
+
+			return false;
+
+		}
+
 		currentID = (int)database.insertData(current.AUTHOR, current.GENDER, current.BUILDNAME, current.XCORD, current.YCORD, current.LOCATION, current.FLOOR, current.HOURS, current.SHOWER, current.SINK, current.PAPERTOWELS);
+
 
 		if(currentID < 0)
 		{
@@ -262,7 +276,10 @@ public class restroom
 
 	public boolean addRestroom(int userID, String gender, String address, long xcoord, long ycoord, String name, int floor, String hours, int shower, int sink, int papertowels)
 	{
-		//database = new BathroomAdaptor(ApplicationProvider.getApplicationContext());
+    if(!checkForNulls(userID, gender, address, xcoord, ycoord, name, floor, hours, shower, sink, papertowels))
+		{
+			return false;
+		}
 		currentID = (int)database.insertData(userID, gender, address, xcoord, ycoord, name, floor, hours, shower, sink, papertowels);
 		current.AUTHOR = userID;
 		current.GENDER = gender;
@@ -275,6 +292,7 @@ public class restroom
 		current.SHOWER = shower;
 		current.SINK = sink;
 		current.PAPERTOWELS = papertowels;
+
 
 		if(currentID < 0)
 		{
@@ -289,7 +307,6 @@ public class restroom
 
 	public ArrayList getRestrooms(long lng, long lat)
 	{
-		//database = new BathroomAdaptor(ApplicationProvider.getApplicationContext());
 		restrooms = database.getBathroomArray();
 
 		for(int i = 0; i < restrooms.size(); i++)
@@ -316,6 +333,7 @@ public class restroom
 
 	}
 
+
 	public void deleteBathroom() {
 		//database = new BathroomAdaptor(ApplicationProvider.getApplicationContext());
 		database.deleteBathroom(currentID);
@@ -326,12 +344,27 @@ public class restroom
 	private void checkFlags()
 	{
 
+		database = new UserAdaptor(ApplicationProvider.getApplicationContext());
+
 		if(flags >= MAX_FLAGS)
 		{
-			//database = new BathroomAdaptor(ApplicationProvider.getApplicationContext());
 			database.deleteBathroom(currentID);
 
 		}
+
+	}
+
+	private boolean checkForNulls(int userID, String gender, String address, long xcoord, long ycoord, String name, int floor, String hours, int shower, int sink, int papertowels)
+	{
+
+		if(userID < 0 || gender == null || address == null || xcoord < 0 || ycoord < 0 || name == null || floor < 0 || hours == null || shower < 0 || sink < 0 || papertowels < 0)
+		{
+
+			return false;
+
+		}
+
+		return true;
 
 	}
 

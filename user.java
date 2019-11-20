@@ -1,6 +1,8 @@
 package com.example.pottypoll;
+
 import androidx.test.core.app.ApplicationProvider;
 import java.io.*;
+
 import java.util.*;
 
 public class user
@@ -12,6 +14,7 @@ public class user
 	private String email;
 	private int mod;
 	private int id;
+
 	private boolean loggedIn;
 	private UserAdaptor database;
 
@@ -26,6 +29,7 @@ public class user
 		loggedIn = false;
 		database = new UserAdaptor(ApplicationProvider.getApplicationContext());
 	}
+
 
 	public user(String un, String e, int m)
 	{
@@ -128,7 +132,13 @@ public class user
 	public boolean checkSignUp(String user, String emailAddress, String pass)
 	{
 
-		//if email is a valid email address
+		if(!checkForNulls(user, emailAddress, pass, 1))
+		{
+
+			return false;
+
+		}
+
 		if(validEmail(emailAddress))
 		{
 
@@ -144,11 +154,28 @@ public class user
 
 	}
 
+
 	public boolean addUserToDatabase(String password)
 	{
 		//database = new UserAdaptor(ApplicationProvider.getApplicationContext());
 		if(database.getPassword(username).length() > 0)
+		if(!validEmail(emailAddress))
 		{
+
+			return false;
+
+		}
+
+		if(database.getPassword(username).length() > 0 ||database.getPassword(username) != null)
+		{
+			return false;
+
+		}
+
+
+		if(!checkForNulls(username, email, password, mod))
+		{
+
 			return false;
 
 		}
@@ -167,6 +194,7 @@ public class user
 
 	public boolean addUserToDatabase(String user, String emailAddress, String pass, int m)
 	{
+
 
 		//database = new UserAdaptor(ApplicationProvider.getApplicationContext());
 		//System.out.println("len = " + database.getPassword(username).length());
@@ -195,7 +223,7 @@ public class user
 
 	public boolean logIn(String user, String pass)
 	{
-		//database = new UserAdaptor(ApplicationProvider.getApplicationContext());
+
 		if(user==null || pass==null)
 		{
 			return false;
@@ -246,6 +274,20 @@ public class user
 		}
 
 		return false;
+
+	}
+
+	private boolean checkForNulls(String user, String emailAddress, String pass, String m)
+	{
+
+		if(user == null || emailAddress == null || pass == null || m == null)
+		{
+
+			return false;
+
+		}
+
+		return true;
 
 	}
 

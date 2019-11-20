@@ -34,7 +34,8 @@ public class UserAdaptor
     {
         SQLiteDatabase db= helper.getWritableDatabase();
         String[] columns={UserHelper.COLUMN_PW};
-        Cursor cursor = db.query(UserHelper.TABLE_NAME, columns, UserHelper.COLUMN_NAME+" = '"+name+"'", null, null, null, null);
+        String[] selectionArgs={name};
+        Cursor cursor = db.query(UserHelper.TABLE_NAME, columns, UserHelper.COLUMN_NAME+" =?", selectionArgs, null, null, null);
         StringBuffer output = new StringBuffer();
         while(cursor.moveToNext())
         {
@@ -51,7 +52,7 @@ public class UserAdaptor
         String[] columns={UserHelper.COLUMN_NAME};
         Cursor cursor = db.query(UserHelper.TABLE_NAME, columns, UserHelper.COLUMN_ID+" = '"+uid+"'", null, null, null, null);
         StringBuffer output = new StringBuffer();
-        while(cursor.moveToNext())
+        while(cursor.moveToNext()) //this shouldn't ever loop
         {
             int cname = cursor.getColumnIndex(UserHelper.COLUMN_PW);
             String uname = cursor.getString(cname);
@@ -62,15 +63,12 @@ public class UserAdaptor
 
     public int getID(String name, String pw) //returns the ID of a user if given the name and pw. -1 if failure
     {
-
         SQLiteDatabase db= helper.getWritableDatabase();
         String[] columns={UserHelper.COLUMN_ID};
         String[] selectionArgs={name, pw};
         Cursor cursor = db.query(UserHelper.TABLE_NAME, columns, UserHelper.COLUMN_NAME+ " =? AND "+UserHelper.COLUMN_PW+" =?", selectionArgs, null, null, null);
         //StringBuffer output = new StringBuffer();
-
         int uid = -1;
-
         while(cursor.moveToNext()) //this shouldn't need to loop, since you shouldn't be able to have multiple users with same username
         {
             int cid = cursor.getColumnIndex(UserHelper.COLUMN_ID);
@@ -218,3 +216,4 @@ public class UserAdaptor
     }
 
 }
+

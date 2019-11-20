@@ -1,5 +1,9 @@
 package com.example.pottypoll;
+
 import androidx.test.core.app.ApplicationProvider;
+import java.io.*; 
+import java.util.*;
+
 
 import java.io.*;
 import java.util.*;
@@ -7,6 +11,7 @@ import java.util.*;
 public class comment
 {
 	private static final int MAX_FLAGS = 5;
+
 	/*
         private String comment;
         private int rating;
@@ -32,6 +37,7 @@ public class comment
 	}
 
 	public comment(String comment, int rating, int userID, int bathroomID, int date, int helpful, int unhelpful)
+
 	{
 
 		current = new CommentStruct(bathroomID, userID, rating, date, helpful, unhelpful, comment);
@@ -63,7 +69,6 @@ public class comment
 	{
 
 		current.AUTHOR = userID;
-
 	}
 
 	public void setBathroomID(int bathroomID)
@@ -114,7 +119,6 @@ public class comment
 
 	public void setHelpful()
 	{
-
 		current.HELPFUL++;
 		database.MarkHelpful(currentID);
 
@@ -147,7 +151,6 @@ public class comment
 
 	public ArrayList getCommentsForBathroom()
 	{
-
 		comments = database.getCommentArray(current.PARENT);
 		return comments;
 
@@ -162,6 +165,12 @@ public class comment
 
 	public boolean addComment()
 	{
+		if(!checkForNulls(current.PARENT, current.AUTHOR, current.RATING, current.TEXT))
+		{
+
+			return false;
+
+		}
 
 		currentID = (int)database.insertData(current.PARENT, current.AUTHOR, current.RATING, current.TEXT);
 
@@ -180,6 +189,14 @@ public class comment
 	{
 		if (r<0 || r>5)
 			return false;
+
+		if(!checkForNulls(bID, uID, r, cmt))
+		{
+
+			return false;
+
+		}
+
 		currentID = (int)database.insertData(bID, uID, r, cmt);
 
 		if(currentID < 0)
@@ -195,18 +212,51 @@ public class comment
 		return true;
 
 	}
+  
 	public void deleteComment()
-	{
+  {
 		database.deleteComment(currentID);
 		current = new CommentStruct(0, 0, 0, 0, 0, 0, "");
 	}
-	/*
-        public void addFlag()
-        {
-            flags++;
-            checkFlags();
-        }
-    */
+
+
+	public boolean editComment(int bathroomID, int userID, int rating, String edits, int commentID)
+	{
+
+		database = new UserAdaptor(ApplicationProvider.getApplicationContext());
+
+		if(!checkForNulls(bathroomID, userID, rating, edits))
+		{
+
+			return false;
+
+		}
+
+		database.deleteComment(commentID);
+		currentID = (int)database.insertData(bathroomID, userID, rating, edits);
+		current.PARENT = bathroomID;
+		current.AUTHOR = userID;
+		current.RATING = rating;
+		current.TEXT = edits;
+
+		if(currentID < 0)
+		{
+
+			return false;
+
+		}
+
+		return true;		
+
+	}
+	
+
+   public void addFlag()
+   {
+       flags++;
+       checkFlags();
+   }
+
 	private void checkFlags()
 	{
 
@@ -215,7 +265,23 @@ public class comment
 
 			database.deleteComment(currentID);
 
+	private boolean checkForNulls(int bID, int uID, int r, String cmt)
+	{
+
+
+		if(bID < 0 || uID < 0 || cmt == null)
+		{
+
+			return false;
+
 		}
+
+		if(r < 0 || r > 5)
+		{
+			return false;
+		}
+
+		return true;
 
 	}
 
