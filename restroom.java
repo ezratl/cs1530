@@ -70,6 +70,7 @@ class restroom
 	public  void setRating(int r)
 	{
 
+		database = new UserAdaptor(ApplicationProvider.getApplicationContext());
 		current.RATERS++;
 		ratingTotal += r;
 		rating = ratingTotal/current.RATERS;
@@ -241,6 +242,15 @@ class restroom
 	public boolean addRestroom()
 	{
 
+		database = new UserAdaptor(ApplicationProvider.getApplicationContext());
+
+		if(!checkForNulls(current.AUTHOR, current.GENDER, current.BUILDNAME, current.XCORD, current.YCORD, current.LOCATION, current.FLOOR, current.HOURS, current.SHOWER, current.SINK, current.PAPERTOWELS))
+		{
+
+			return false;
+
+		}
+
 		currentID = (int)database.insertData(current.AUTHOR, current.GENDER, current.BUILDNAME, current.XCORD, current.YCORD, current.LOCATION, current.FLOOR, current.HOURS, current.SHOWER, current.SINK, current.PAPERTOWELS);
 
 		if(currentID < 0)
@@ -256,6 +266,15 @@ class restroom
 
 	public boolean addRestroom(int userID, String gender, String address, long xcoord, long ycoord, String name, int floor, String hours, int shower, int sink, int papertowels)
 	{
+
+		database = new UserAdaptor(ApplicationProvider.getApplicationContext());
+
+		if(!checkForNulls(userID, gender, address, xcoord, ycoord, name, floor, hours, shower, sink, papertowels))
+		{
+
+			return false;
+
+		}
 
 		currentID = (int)database.insertData(userID, gender, address, xcoord, ycoord, name, floor, hours, shower, sink, papertowels);
 		current.AUTHOR = userID;
@@ -284,6 +303,7 @@ class restroom
 	public ArrayList getRestrooms(long lng, long lat)
 	{
 
+		database = new UserAdaptor(ApplicationProvider.getApplicationContext());
 		restrooms = database.getBathroomArray();
 
 		for(int i = 0; i < restrooms.size; i++)
@@ -313,12 +333,28 @@ class restroom
 	private void checkFlags()
 	{
 
+		database = new UserAdaptor(ApplicationProvider.getApplicationContext());
+
 		if(flags >= MAX_FLAGS)
 		{
 
 			database.deleteBathroom(currentID);
 
 		}
+
+	}
+
+	private boolean checkForNulls(int userID, String gender, String address, long xcoord, long ycoord, String name, int floor, String hours, int shower, int sink, int papertowels)
+	{
+
+		if(userID == null || gender == null || address == null || xcoord == null || ycoord == null || name == null || floor == null || hours == null || shower == null || sink == null || papertowels == null)
+		{
+
+			return false;
+
+		}
+
+		return true;
 
 	}
 

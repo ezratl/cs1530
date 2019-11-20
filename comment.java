@@ -113,6 +113,7 @@ class comment
 	public void setHelpful()
 	{
 
+		database = new UserAdaptor(ApplicationProvider.getApplicationContext());
 		current.HELPFUL++;
 		database.MarkHelpful(currentID);
 
@@ -121,6 +122,7 @@ class comment
 	public void setUnhelpful()
 	{
 
+		database = new UserAdaptor(ApplicationProvider.getApplicationContext());
 		current.UNHELPFUL++;
 		database.MarkUnhelpful(currentID);
 		checkFlags();
@@ -146,6 +148,7 @@ class comment
 	public ArrayList getCommentsForBathroom()
 	{
 
+		database = new UserAdaptor(ApplicationProvider.getApplicationContext());
 		comments = database.getCommentArray(current.PARENT);
 		return comments;
 
@@ -154,12 +157,23 @@ class comment
 	public ArrayList getCommentsForBathroom(int bathroomID)
 	{
 
+		database = new UserAdaptor(ApplicationProvider.getApplicationContext());
 		comments = database.getCommentArray(bathroomID);
+
 	}
 
 	public boolean addComment()
 	{
 
+		database = new UserAdaptor(ApplicationProvider.getApplicationContext());
+
+		if(!checkForNulls(current.PARENT, current.AUTHOR, current.RATING, current.TEXT))
+		{
+
+			return false;
+
+		}
+				
 		currentID = (int)database.insertData(current.PARENT, current.AUTHOR, current.RATING, current.TEXT);
 
 		if(currentID < 0)
@@ -175,6 +189,15 @@ class comment
 
 	public boolean addComment(int bID, int uID, int r, String cmt)
 	{
+
+		database = new UserAdaptor(ApplicationProvider.getApplicationContext());
+
+		if(!checkForNulls(bID, uID, r, cmt))
+		{
+
+			return false;
+
+		}
 
 		currentID = (int)database.insertData(bID, uID, r, cmt);
 		current.PARENT = bID;
@@ -204,12 +227,27 @@ class comment
 	private void checkFlags()
 	{
 
+		database = new UserAdaptor(ApplicationProvider.getApplicationContext());
 		if(database.getUnhelpful(currentID) >= MAX_FLAGS)
 		{
 
 			database.deleteComment(currentID);
 			
 		}
+
+	}
+
+	private boolean checkForNulls(int bID, int uID, int r, String cmt)
+	{
+
+		if(bID == null || uID == null || r == null || cmt == null)
+		{
+
+			return false;
+
+		}
+
+		return true;
 
 	}
 
