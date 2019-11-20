@@ -1,214 +1,215 @@
 package com.example.pottypoll;
+import androidx.test.core.app.ApplicationProvider;
 
-class comment
+import java.io.*;
+import java.util.*;
+
+public class comment
 {
 	private static final int MAX_FLAGS = 5;
-
-	private String comment;
-	private int rating;
-	private int numRatings = 0;
-	private int ratingTotal = 0;
-	private int flags = 0;
-	private int id;
-	private int userID;
-	private int bathroomID;
-	private int helpful = 0;
-	private int unhelpful = 0;
-	private CommentAdaptor database = new CommentAdaptor();
+	/*
+        private String comment;
+        private int rating;
+        private int numRatings = 0;
+        private int ratingTotal = 0;
+        private int flags = 0;
+        private int id;
+        private int userID;
+        private int bathroomID;
+        private int helpful = 0;
+        private int unhelpful = 0;
+    */
+	private CommentStruct current;
+	private int currentID;
+	private CommentAdaptor database = new CommentAdaptor(ApplicationProvider.getApplicationContext());
 	private ArrayList<CommentStruct> comments = new ArrayList<CommentStruct>();
 
-	public static void comment()
+	public comment()
 	{
 
-		comment = 0;
-		rating = 0;
-		id = 0;
-		bathroomID = 0;
+		current = new CommentStruct(0, 0, 0, 0, 0, 0, "");
 
 	}
 
-	public static void comment(String cmnt, int r, int uID, int bID)
+	public comment(String comment, int rating, int userID, int bathroomID, int date, int helpful, int unhelpful)
 	{
 
-		comment = cmnt;
-		rating = r;
-		userID = uID;
-		bathroomID = bID;
+		current = new CommentStruct(bathroomID, userID, rating, date, helpful, unhelpful, comment);
 
 	}
 
-	public static void comment(int alPos)
+	public comment(int alPos)
 	{
 
-		comment = comments.get(alPos).TEXT;
-		rating = comments.get(alPos).RATING;
-		userID = comments.get(alPos).AUTHOR;
-		bathroomID = comments.get(alPos).PARENT;
-		helpful = comments.get(alPos).HELPFUL;
-		unhelpful = comments.get(alPos).UNHELPFUL;
+		current = comments.get(alPos);
 
 	}
 
-	public static void setComment(String shitpost)
+	public void setComment(String shitpost)
 	{
 
-		comment = shitpost;
+		current.TEXT = shitpost;
 
 	}
 
-	public static void setRating(int r)
+	public void setRating(int rating)
 	{
 
-		rating = r;
+		current.RATING = rating;
 
 	}
 
-	public static void setUserID(int uID)
+	public void setUserID(int userID)
 	{
 
-		userID = uID;
-	
-	}
-
-	public static void setBathroomID(int bID)
-	{
-
-		bathroomID = bID;
+		current.AUTHOR = userID;
 
 	}
 
-	public static String getComment()
+	public void setBathroomID(int bathroomID)
 	{
 
-		String c = comment;
+		current.PARENT = bathroomID;
+
+	}
+
+	public String getComment()
+	{
+
+		String c = current.TEXT;
 		return c;
 
 	}
 
-	public static double getRating()
+	public int getRating()
 	{
 
-		double r = rating;
+		int r = current.RATING;
 		return r;
 
 	}
 
-	public static int getUserID()
+	public int getUserID()
 	{
 
-		int i = userID;
+		int i = current.AUTHOR;
 		return i;
 
 	}
 
-	public static int getBathroomID()
+	public int getBathroomID()
 	{
 
-		int i = bathroomID;
+		int i = current.PARENT;
 		return i;
 
 	}
 
-	public static int getID()
+	public int getID()
 	{
 
-		int i = id;
+		int i = currentID;
 		return i;
 	}
 
-	public static void setHelpful()
+	public void setHelpful()
 	{
 
-		helpful++;
-		database.MarkHelpful(id);
+		current.HELPFUL++;
+		database.MarkHelpful(currentID);
 
 	}
 
-	public static void setUnhelpful()
+	public void setUnhelpful()
 	{
 
-		unhelpful++;
-		database.MarkUnhelpful(id);
-
-	}
-
-	public static int getHelpful()
-	{
-
-		int h = helpful;
-		return helpful;
-
-	}
-
-	public static int getUnhelpful()
-	{
-
-		int uh = unhelpful;
-		return uh;
-
-	}
-
-	public static ArrayList getCommentsForBathroom()
-	{
-
-		comments = database.getCommentArray(bathroomID);
-		return comments;
-
-	}
-
-	public static boolean addComment()
-	{
-
-		id = (int)database.insertData(bathroomID, userID, rating, comment);
-
-		if(id < 0)
-		{
-
-			return false;
-
-		}
-
-		return true;
-
-	}
-
-	public static boolean addComment(int bID, int uID, int r, String cmt)
-	{
-
-		comment = cmt;
-		rating = r;
-		userID = uID;
-		bathroomID = bID;
-
-		id = (int)database.insertData(bID, uID, r, cmt);
-
-		if(id < 0)
-		{
-
-			return false;
-
-		}
-
-		return true;
-
-	}
-
-	public static void addFlag()
-	{
-
-		flags++;
+		current.UNHELPFUL++;
+		database.MarkUnhelpful(currentID);
 		checkFlags();
 
 	}
 
-	private static void checkFlags()
+	public int getHelpful()
 	{
 
-		if(flags >= MAX_FLAGS)
+		int h = current.HELPFUL;
+		return h;
+
+	}
+
+	public int getUnhelpful()
+	{
+
+		int uh = current.UNHELPFUL;
+		return uh;
+
+	}
+
+	public ArrayList getCommentsForBathroom()
+	{
+
+		comments = database.getCommentArray(current.PARENT);
+		return comments;
+
+	}
+
+	public ArrayList getCommentsForBathroom(int bathroomID)
+	{
+
+		comments = database.getCommentArray(bathroomID);
+		return comments;
+	}
+
+	public boolean addComment()
+	{
+
+		currentID = (int)database.insertData(current.PARENT, current.AUTHOR, current.RATING, current.TEXT);
+
+		if(currentID < 0)
 		{
 
-			database.deleteComment(id);
-			
+			return false;
+
+		}
+
+		return true;
+
+	}
+
+	public boolean addComment(int bID, int uID, int r, String cmt)
+	{
+
+		currentID = (int)database.insertData(bID, uID, r, cmt);
+		current.PARENT = bID;
+		current.AUTHOR = uID;
+		current.RATING = r;
+		current.TEXT = cmt;
+
+		if(currentID < 0)
+		{
+
+			return false;
+
+		}
+
+		return true;
+
+	}
+	/*
+        public void addFlag()
+        {
+            flags++;
+            checkFlags();
+        }
+    */
+	private void checkFlags()
+	{
+
+		if(database.getUnhelpful(currentID) >= MAX_FLAGS)
+		{
+
+			database.deleteComment(currentID);
+
 		}
 
 	}

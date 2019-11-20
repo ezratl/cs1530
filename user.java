@@ -1,90 +1,85 @@
 package com.example.pottypoll;
+import androidx.test.core.app.ApplicationProvider;
+import java.io.*;
+import java.util.*;
 
-class user
+public class user
 {
-	
+
 	private long longitude;
 	private long latitude;
 	private String username;
 	private String email;
-	private String password;
 	private int mod;
 	private int id;
-	private boolean loggedIn = false;
-	private UserAdaptor database = new UserAdaptor();
+	private boolean loggedIn;
+	private UserAdaptor database;
 
-	public static void user()
+	public user()
 	{
 
 		username = "";
 		email = "";
-		password = "";
-		location[0] = -1;
-		location[1] = -1;
+		longitude = -1;
+		latitude = -1;
 		mod = 0;
-
+		loggedIn = false;
+		database = new UserAdaptor(ApplicationProvider.getApplicationContext());
 	}
 
-	public static void user(String un, String e, String p, int m)
+	public user(String un, String e, int m)
 	{
 
 		username = un;
 		email = e;
-		password = p;
 		mod = m;
-
+		loggedIn = false;
+		database = new UserAdaptor(ApplicationProvider.getApplicationContext());
 	}
 
-	public static void setLongitude(long l)
+	public void setLongitude(long l)
 	{
 
 		longitude = l;
 
 	}
 
-	public static void setLatitude(long l)
+	public void setLatitude(long l)
 	{
 
 		latitude = l;
 
 	}
 
-	public static void setUsername(String username)
+	public void setUsername(String username)
 	{
 
 		this.username = username;
 
 	}
 
-	public static void setPassword(String password)
-	{
-
-		this.password = password;
-
-	}
-
-	public static void setEmail(String email)
+	public void setEmail(String email)
 	{
 
 		this.email = email;
 	}
 
-	public static void setMod(int mod)
+	public void setMod(int mod)
 	{
 
 		this.mod = mod;
 
 	}
 
-	public static long getLongitude()
+	public long getLongitude()
 	{
 
 		long l = longitude;
 		return l;
-		
+
 	}
 
-	public static long getLatitude()
+	public long getLatitude()
 	{
 
 		long l = latitude;
@@ -92,7 +87,7 @@ class user
 
 	}
 
-	public static String getUsername()
+	public String getUsername()
 	{
 
 		String u = username;
@@ -100,15 +95,7 @@ class user
 
 	}
 
-	public static String getPassword()
-	{
-
-		int p = password;
-		return p;
-
-	}
-
-	public static String getEmail()
+	public String getEmail()
 	{
 
 		String e = email;
@@ -116,7 +103,7 @@ class user
 
 	}
 
-	public static int getMod()
+	public int getMod()
 	{
 
 		int m = mod;
@@ -124,21 +111,21 @@ class user
 
 	}
 
-	public static int getID()
+	public int getID()
 	{
 
 		int i = id;
 		return i;
 	}
 
-	public static boolean getLoginStatus()
+	public boolean getLoginStatus()
 	{
 
 		boolean l = loggedIn;
 		return l;
 	}
 
-	public static boolean checkSignUp(String user, String emailAddress, String pass)
+	public boolean checkSignUp(String user, String emailAddress, String pass)
 	{
 
 		//if email is a valid email address
@@ -148,7 +135,6 @@ class user
 			//save values
 			username = user;
 			email = emailAddress;
-			password = pass;
 
 			return true;
 
@@ -158,21 +144,19 @@ class user
 
 	}
 
-	public static boolean addUserToDatabase()
+	public boolean addUserToDatabase(String password)
 	{
-
-		if(database.getPassword(username).length() > 0 ||database.getPassword(username) != null)
+		//database = new UserAdaptor(ApplicationProvider.getApplicationContext());
+		if(database.getPassword(username).length() > 0)
 		{
-
 			return false;
 
 		}
 
 		id = (int)database.insertData(username, password, email, mod);
-		
+
 		if(id < 0)
 		{
-
 			return false;
 
 		}
@@ -181,42 +165,46 @@ class user
 
 	}
 
-	public static boolean addUserToDatabase(String user, String emailAddress, String pass, int m)
+	public boolean addUserToDatabase(String user, String emailAddress, String pass, int m)
 	{
 
-		if(database.getPassword(user).length() > 0 ||database.getPassword(user) != null)
+		//database = new UserAdaptor(ApplicationProvider.getApplicationContext());
+		System.out.println("len = " + database.getPassword(username).length());
+		if(user==null || emailAddress==null || pass==null ||
+				!validEmail(emailAddress) || database.getPassword(username).length() > 0)
 		{
-
 			return false;
 
 		}
-
-		username = user;
-		email = emailAddress;
-		password = pass;
-		mod = m;
 
 		id = (int)database.insertData(user, pass, emailAddress, m);
-		
+
 		if(id < 0)
 		{
 
 			return false;
 
 		}
+		username = user;
+		email = emailAddress;
+		mod = m;
 
 		return true;
 
 	}
 
-	public static boolean logIn(String user, String pass)
+	public boolean logIn(String user, String pass)
 	{
-
-		int id = database.getID(user, pass);
+		//database = new UserAdaptor(ApplicationProvider.getApplicationContext());
+		if(user==null || pass==null)
+		{
+			return false;
+		}
+		int idCheck = database.getID(user, pass);
 
 		if(idCheck < 0)
 		{
-
+			//System.out.println("id = " + idCheck);
 			return false;
 
 		}
@@ -224,25 +212,33 @@ class user
 		{
 
 			username = user;
-			password = pass;
 			id = idCheck;
 			loggedIn = true;
 			return true;
 
 		}
 
-		return false;
+		//return false;
 
 	}
 
-	private static boolean validEmail(String given)
+	public void logout ()
+	{
+		loggedIn = false;
+		username = "";
+		email = "";
+		mod = 0;
+		loggedIn = false;
+	}
+
+	private boolean validEmail(String given)
 	{
 
 		int size = given.length();
 		int atSign = given.indexOf('@');
 		int dotSign = given.indexOf('.');
 
-		if(atSign < dotSign && dotSign == (size - 3))
+		if(atSign < dotSign && dotSign == (size - 4))
 		{
 
 			return true;

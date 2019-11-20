@@ -191,7 +191,7 @@ public class BathroomAdaptor
     }
 
     //insert
-    public long insertData(int userID, String gender, String address, long xcoord, long ycoord, String name, int floor, String hours, int shower, int sink, int papertowels) //returns ID if successful, is - on failure
+    public long insertData(int userID, String gender, String address, double xcoord, double ycoord, String name, int floor, String hours, int shower, int sink, int papertowels) //returns ID if successful, is - on failure
     {
         SQLiteDatabase db =helper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
