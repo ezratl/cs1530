@@ -1,14 +1,19 @@
+package com.example.pottypoll;
+
 class user
 {
 	
-	private int location[] = new int[2];	//longitude, latitude
+	private long longitude;
+	private long latitude;
 	private String username;
 	private String email;
 	private String password;
 	private int mod;
 	private int id;
+	private boolean loggedIn = false;
+	private UserAdaptor database = new UserAdaptor();
 
-	public void user()
+	public static void user()
 	{
 
 		username = "";
@@ -20,72 +25,74 @@ class user
 
 	}
 
-	public void user(String username, String email, String password, int mod)
+	public static void user(String un, String e, String p, int m)
 	{
 
-		this.username = username;
-		this.email = email;
-		this.password = password;
-		this.mod = mod;
+		username = un;
+		email = e;
+		password = p;
+		mod = m;
 
 	}
 
-	public void setLongitude(int longitude)
+	public static void setLongitude(long l)
 	{
 
-		location[0] = longitude;
+		longitude = l;
 
 	}
 
-	public void setLatitude(int latitude)
+	public static void setLatitude(long l)
 	{
 
-		location[1] = latitude;
+		latitude = l;
 
 	}
 
-	public void setLocation(int location[])
-	{
-
-		this.location = location;
-	}
-
-	public void setUsername(String username)
+	public static void setUsername(String username)
 	{
 
 		this.username = username;
 
 	}
 
-	public void setPassword(String password)
+	public static void setPassword(String password)
 	{
 
 		this.password = password;
 
 	}
 
-	public void setEmail(String email)
+	public static void setEmail(String email)
 	{
 
 		this.email = email;
 	}
 
-	public void setMod(int mod)
+	public static void setMod(int mod)
 	{
 
 		this.mod = mod;
 
 	}
 
-	public int[] getLocation()
+	public static long getLongitude()
 	{
 
-		int l[] = location;
+		long l = longitude;
 		return l;
 		
 	}
 
-	public String getUsername()
+	public static long getLatitude()
+	{
+
+		long l = latitude;
+		return l;
+
+	}
+
+	public static String getUsername()
 	{
 
 		String u = username;
@@ -93,7 +100,7 @@ class user
 
 	}
 
-	public String getPassword()
+	public static String getPassword()
 	{
 
 		int p = password;
@@ -101,7 +108,7 @@ class user
 
 	}
 
-	public String getEmail()
+	public static String getEmail()
 	{
 
 		String e = email;
@@ -109,7 +116,7 @@ class user
 
 	}
 
-	public int getMod()
+	public static int getMod()
 	{
 
 		int m = mod;
@@ -117,14 +124,21 @@ class user
 
 	}
 
-	public int getID()
+	public static int getID()
 	{
 
 		int i = id;
 		return i;
 	}
 
-	public boolean checkSignUp(String user, String emailAddress, String pass)
+	public static boolean getLoginStatus()
+	{
+
+		boolean l = loggedIn;
+		return l;
+	}
+
+	public static boolean checkSignUp(String user, String emailAddress, String pass)
 	{
 
 		//if email is a valid email address
@@ -144,24 +158,38 @@ class user
 
 	}
 
-	public UserAdaptor addUserToDatabase(UserAdaptor database)
+	public static boolean addUserToDatabase()
 	{
+
+		if(database.getPassword(username).length() > 0 ||database.getPassword(username) != null)
+		{
+
+			return false;
+
+		}
 
 		id = (int)database.insertData(username, password, email, mod);
 		
 		if(id < 0)
 		{
 
-			System.out.println("Failed to add user to database.");
+			return false;
 
 		}
 
-		return database;
+		return true;
 
 	}
 
-	public UserAdaptor addUserToDatabase(String user, String emailAddress, String pass, int m, UserAdaptor database)
+	public static boolean addUserToDatabase(String user, String emailAddress, String pass, int m)
 	{
+
+		if(database.getPassword(user).length() > 0 ||database.getPassword(user) != null)
+		{
+
+			return false;
+
+		}
 
 		username = user;
 		email = emailAddress;
@@ -173,15 +201,15 @@ class user
 		if(id < 0)
 		{
 
-			System.out.println("Failed to add user to database.");
+			return false;
 
 		}
 
-		return database;
+		return true;
 
 	}
 
-	public boolean logIn(String user, String pass, UserAdaptor database)
+	public static boolean logIn(String user, String pass)
 	{
 
 		int id = database.getID(user, pass);
@@ -198,6 +226,7 @@ class user
 			username = user;
 			password = pass;
 			id = idCheck;
+			loggedIn = true;
 			return true;
 
 		}
@@ -206,7 +235,7 @@ class user
 
 	}
 
-	private boolean validEmail(String given)
+	private static boolean validEmail(String given)
 	{
 
 		int size = given.length();
@@ -223,65 +252,5 @@ class user
 		return false;
 
 	}
-/*
-	public void addComment(String cmnt, CommentAdaptor database)
-	{
 
-		comment newComment = new comment(cmnt, 0);	//need to add it to appropriate restroom (shrug)
-		//add comment to database
-
-	}
-
-	public void addRestroom()
-	{
-
-		//???
-
-	}
-
-	public void flagRestroom()
-	{
-
-		//get restroom
-		restroom flagged = new restroom();
-		flagged.addFlag();
-
-	}
-
-	public void flagComment()
-	{
-
-		//get comment
-		comment flagged = new comment();
-		flagged.addFlag();
-
-	}
-
-	public void rateRestroom(int rating)
-	{
-
-		//get restroom
-		restroom rated = new restroom();
-		rated.setRating(rating);
-
-	}
-
-	public void rateComment(int rating)
-	{
-
-		//get comment
-		comment rated = new comment();
-		rated.setRating(rating);
-
-	}
-
-	public int[] getNearestRestroom()
-	{
-
-		map finder = new map();
-		int restroomLocation[] = finder.findNearestRestroom(location);
-		return restroomLocation;
-
-	}
-*/
 }
