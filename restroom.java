@@ -347,7 +347,7 @@ class restroom
 	private boolean checkForNulls(int userID, String gender, String address, long xcoord, long ycoord, String name, int floor, String hours, int shower, int sink, int papertowels)
 	{
 
-		if(userID == null || gender == null || address == null || xcoord == null || ycoord == null || name == null || floor == null || hours == null || shower == null || sink == null || papertowels == null)
+		if(userID < 0 || gender == null || address == null || xcoord < 0 || ycoord < 0 || name == null || floor < 0 || hours == null || shower < 0 || sink < 0 || papertowels < 0)
 		{
 
 			return false;

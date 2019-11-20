@@ -173,7 +173,7 @@ class comment
 			return false;
 
 		}
-				
+
 		currentID = (int)database.insertData(current.PARENT, current.AUTHOR, current.RATING, current.TEXT);
 
 		if(currentID < 0)
@@ -215,6 +215,36 @@ class comment
 		return true;
 
 	}
+
+	public boolean editComment(int bathroomID, int userID, int rating, String edits, int commentID)
+	{
+
+		database = new UserAdaptor(ApplicationProvider.getApplicationContext());
+
+		if(!checkForNulls(bathroomID, userID, rating, edits))
+		{
+
+			return false;
+
+		}
+
+		database.deleteComment(commentID);
+		currentID = (int)database.insertData(bathroomID, userID, rating, edits);
+		current.PARENT = bathroomID;
+		current.AUTHOR = userID;
+		current.RATING = rating;
+		current.TEXT = edits;
+
+		if(currentID < 0)
+		{
+
+			return false;
+
+		}
+
+		return true;		
+
+	}
 /*
 	public void addFlag()
 	{
@@ -240,11 +270,19 @@ class comment
 	private boolean checkForNulls(int bID, int uID, int r, String cmt)
 	{
 
-		if(bID == null || uID == null || r == null || cmt == null)
+
+		if(bID < 0 || uID < 0 || cmt == null)
 		{
 
 			return false;
 
+		}
+
+		if(r < 0 || r > 5)
+		{
+
+			return false;
+			
 		}
 
 		return true;
