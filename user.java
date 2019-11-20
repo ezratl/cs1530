@@ -169,7 +169,7 @@ public class user
 	{
 
 		//database = new UserAdaptor(ApplicationProvider.getApplicationContext());
-		System.out.println("len = " + database.getPassword(username).length());
+		//System.out.println("len = " + database.getPassword(username).length());
 		if(user==null || emailAddress==null || pass==null ||
 				!validEmail(emailAddress) || database.getPassword(username).length() > 0)
 		{

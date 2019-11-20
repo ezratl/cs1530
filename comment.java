@@ -178,22 +178,27 @@ public class comment
 
 	public boolean addComment(int bID, int uID, int r, String cmt)
 	{
-
+		if (r<0 || r>5)
+			return false;
 		currentID = (int)database.insertData(bID, uID, r, cmt);
+
+		if(currentID < 0)
+		{
+			return false;
+		}
+
 		current.PARENT = bID;
 		current.AUTHOR = uID;
 		current.RATING = r;
 		current.TEXT = cmt;
 
-		if(currentID < 0)
-		{
-
-			return false;
-
-		}
-
 		return true;
 
+	}
+	public void deleteComment()
+	{
+		database.deleteComment(currentID);
+		current = new CommentStruct(0, 0, 0, 0, 0, 0, "");
 	}
 	/*
         public void addFlag()

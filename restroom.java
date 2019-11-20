@@ -240,6 +240,10 @@ public class restroom
 
 	}
 
+	public int getID() {
+		return currentID;
+	}
+
 	public boolean addRestroom()
 	{
 		//database = new BathroomAdaptor(ApplicationProvider.getApplicationContext());
