@@ -24,6 +24,7 @@ public class comment
         private int helpful = 0;
         private int unhelpful = 0;
     */
+	private int flags;
 	private CommentStruct current;
 	private int currentID;
 	private CommentAdaptor database = new CommentAdaptor(ApplicationProvider.getApplicationContext());
@@ -223,8 +224,6 @@ public class comment
 	public boolean editComment(int bathroomID, int userID, int rating, String edits, int commentID)
 	{
 
-		database = new UserAdaptor(ApplicationProvider.getApplicationContext());
-
 		if(!checkForNulls(bathroomID, userID, rating, edits))
 		{
 
@@ -257,13 +256,13 @@ public class comment
        checkFlags();
    }
 
-	private void checkFlags()
-	{
+   private void checkFlags() {
 
-		if(database.getUnhelpful(currentID) >= MAX_FLAGS)
-		{
+	   if (database.getUnhelpful(currentID) >= MAX_FLAGS) {
 
-			database.deleteComment(currentID);
+		   database.deleteComment(currentID);
+	   }
+   }
 
 	private boolean checkForNulls(int bID, int uID, int r, String cmt)
 	{

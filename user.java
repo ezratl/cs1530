@@ -157,9 +157,7 @@ public class user
 
 	public boolean addUserToDatabase(String password)
 	{
-		//database = new UserAdaptor(ApplicationProvider.getApplicationContext());
-		if(database.getPassword(username).length() > 0)
-		if(!validEmail(emailAddress))
+		if(!validEmail(email))
 		{
 
 			return false;
@@ -277,7 +275,7 @@ public class user
 
 	}
 
-	private boolean checkForNulls(String user, String emailAddress, String pass, String m)
+	private boolean checkForNulls(String user, String emailAddress, String pass, Integer m)
 	{
 
 		if(user == null || emailAddress == null || pass == null || m == null)
