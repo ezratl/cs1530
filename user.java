@@ -13,7 +13,7 @@ class user
 	private int mod;
 	private int id;
 	private boolean loggedIn = false;
-	private UserAdaptor database = new UserAdaptor();
+	private UserAdaptor database;
 
 	public void user()
 	{
@@ -186,11 +186,22 @@ class user
 	public boolean addUserToDatabase(String user, String emailAddress, String pass, int m)
 	{
 
-		if(database.getPassword(user).length() <= 0 || database.getPassword(user) == null)
+		if(database != null)
 		{
 
-			return false;
+			if(database.getPassword(user).length() > 0 || database.getPassword(user) != null)
+			{
 
+				return false;
+
+			}
+
+		}
+		else
+		{
+
+			database = new UserAdaptor();
+			
 		}
 
 		username = user;
