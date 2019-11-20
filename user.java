@@ -13,7 +13,7 @@ class user
 	private int mod;
 	private int id;
 	private boolean loggedIn = false;
-	private UserAdaptor database;
+	private UserAdaptor database = new UserAdaptor();;
 
 	public void user()
 	{
@@ -143,7 +143,13 @@ class user
 	public boolean checkSignUp(String user, String emailAddress, String pass)
 	{
 
-		//if email is a valid email address
+		if(!checkForNulls(user, emailAddress, pass, 1))
+		{
+
+			return false;
+
+		}
+
 		if(validEmail(emailAddress))
 		{
 
@@ -163,7 +169,24 @@ class user
 	public boolean addUserToDatabase()
 	{
 
+		database = new UserAdaptor(ApplicationProvider.getApplicationContext());
+
+		if(!validEmail(emailAddress))
+		{
+
+			return false;
+
+		}
+
 		if(database.getPassword(username).length() > 0 ||database.getPassword(username) != null)
+		{
+
+			return false;
+
+		}
+
+
+		if(!checkForNulls(username, email, password, mod))
 		{
 
 			return false;
@@ -186,22 +209,27 @@ class user
 	public boolean addUserToDatabase(String user, String emailAddress, String pass, int m)
 	{
 
-		if(database != null)
+		database = new UserAdaptor(ApplicationProvider.getApplicationContext());
+
+		if(!validEmail(emailAddress))
 		{
 
-			if(database.getPassword(user).length() > 0 || database.getPassword(user) != null)
-			{
-
-				return false;
-
-			}
+			return false;
 
 		}
-		else
+
+		if(database.getPassword(user).length() > 0 || database.getPassword(user) != null)
 		{
 
-			database = new UserAdaptor();
-			
+			return false;
+
+		}
+
+		if(!checkForNulls(user, emailAddress, pass, m))
+		{
+
+			return false;
+
 		}
 
 		username = user;
@@ -225,6 +253,7 @@ class user
 	public boolean logIn(String user, String pass)
 	{
 
+		database = new UserAdaptor(ApplicationProvider.getApplicationContext());
 		int idCheck = database.getID(user, pass);
 
 		if(idCheck < 0)
@@ -263,6 +292,20 @@ class user
 		}
 
 		return false;
+
+	}
+
+	private boolean checkForNulls(String user, String emailAddress, String pass, String m)
+	{
+
+		if(user == null || emailAddress == null || pass == null || m == null)
+		{
+
+			return false;
+
+		}
+
+		return true;
 
 	}
 
