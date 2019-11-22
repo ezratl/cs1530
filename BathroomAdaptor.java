@@ -176,6 +176,22 @@ public class BathroomAdaptor
         }
         return value;
     }
+
+    public int getFlags(int uid) //returns -1 on error
+    {
+        SQLiteDatabase db= helper.getWritableDatabase();
+        String[] columns={BathroomHelper.COLUMN_RATING};
+        Cursor cursor = db.query(BathroomHelper.TABLE_NAME, columns, BathroomHelper.COLUMN_ID+" = '"+uid+"'", null, null, null, null);
+        int value = -1;
+        while(cursor.moveToNext()) //this shouldn't ever loop
+        {
+            int cname = cursor.getColumnIndex(BathroomHelper.COLUMN_ACTIVE);
+            value = cursor.getInt(cname);
+        }
+        return value;
+    }
+
+
     public int getRaters(int uid) //returns -1 on error
     {
         SQLiteDatabase db= helper.getWritableDatabase();
@@ -218,11 +234,11 @@ public class BathroomAdaptor
     }
 
     //modify
-    public void addRating(int uid)
+    public void addRating(int uid, int rating)
     {
         SQLiteDatabase db= helper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(BathroomHelper.COLUMN_RATING, getRating(uid) + 1);
+        contentValues.put(BathroomHelper.COLUMN_RATING, getRating(uid) + rating);
 
         db.update(BathroomHelper.TABLE_NAME, contentValues, BathroomHelper.COLUMN_ID+" = '"+uid+"'", null );
 
@@ -238,6 +254,15 @@ public class BathroomAdaptor
 
     }
 
+    public void addFlag(int uid)
+    {
+        SQLiteDatabase db= helper.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(BathroomHelper.COLUMN_ACTIVE, getRaters(uid) + 1);
+
+        db.update(BathroomHelper.TABLE_NAME, contentValues, BathroomHelper.COLUMN_ID+" = '"+uid+"'", null );
+
+    }
     //delete
     public void deleteBathroom(int ID) //delete bathroom with given ID
     {
@@ -256,7 +281,7 @@ public class BathroomAdaptor
         private static final String COLUMN_SHOWER = "Shower"; //int 0 or 1
         private static final String COLUMN_SINK = "Sink"; //int 0 or 1
         private static final String COLUMN_PAPERTOWELS = "PaperTowels"; //int 0 or 1
-        private static final String COLUMN_ACTIVE = "Active"; //int 0 ir 1
+        private static final String COLUMN_ACTIVE = "Active"; //int 0 or 1
         private static final String COLUMN_LOCATION = "Address"; //varchar
         private static final String COLUMN_XCORD = "Coord1"; //real
         private static final String COLUMN_YCORD = "Coord2";   //real
@@ -309,4 +334,5 @@ public class BathroomAdaptor
 
 
 }
+
 
