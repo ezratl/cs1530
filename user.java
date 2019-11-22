@@ -1,44 +1,40 @@
 package com.example.pottypoll;
-
-import androidx.test.core.app.ApplicationProvider;
-import java.io.*;
-
+import java.io.*; 
 import java.util.*;
 
-public class user
+class user
 {
-
+	
 	private long longitude;
 	private long latitude;
 	private String username;
 	private String email;
+	private String password;
 	private int mod;
 	private int id;
+	private boolean loggedIn = false;
+	private UserAdaptor database = new UserAdaptor();;
 
-	private boolean loggedIn;
-	private UserAdaptor database;
-
-	public user()
+	public void user()
 	{
 
 		username = "";
 		email = "";
+		password = "";
 		longitude = -1;
 		latitude = -1;
 		mod = 0;
-		loggedIn = false;
-		database = new UserAdaptor(ApplicationProvider.getApplicationContext());
+
 	}
 
-
-	public user(String un, String e, int m)
+	public void user(String un, String e, String p, int m)
 	{
 
 		username = un;
 		email = e;
+		password = p;
 		mod = m;
-		loggedIn = false;
-		database = new UserAdaptor(ApplicationProvider.getApplicationContext());
+
 	}
 
 	public void setLongitude(long l)
@@ -62,6 +58,13 @@ public class user
 
 	}
 
+	public void setPassword(String password)
+	{
+
+		this.password = password;
+
+	}
+
 	public void setEmail(String email)
 	{
 
@@ -80,7 +83,7 @@ public class user
 
 		long l = longitude;
 		return l;
-
+		
 	}
 
 	public long getLatitude()
@@ -96,6 +99,14 @@ public class user
 
 		String u = username;
 		return u;
+
+	}
+
+	public String getPassword()
+	{
+
+		String p = password;
+		return p;
 
 	}
 
@@ -145,6 +156,7 @@ public class user
 			//save values
 			username = user;
 			email = emailAddress;
+			password = pass;
 
 			return true;
 
@@ -154,10 +166,12 @@ public class user
 
 	}
 
-
-	public boolean addUserToDatabase(String password)
+	public boolean addUserToDatabase()
 	{
-		if(!validEmail(email))
+
+		database = new UserAdaptor(ApplicationProvider.getApplicationContext());
+
+		if(!validEmail(emailAddress))
 		{
 
 			return false;
@@ -166,6 +180,7 @@ public class user
 
 		if(database.getPassword(username).length() > 0 ||database.getPassword(username) != null)
 		{
+
 			return false;
 
 		}
@@ -179,9 +194,10 @@ public class user
 		}
 
 		id = (int)database.insertData(username, password, email, mod);
-
+		
 		if(id < 0)
 		{
+
 			return false;
 
 		}
@@ -193,27 +209,42 @@ public class user
 	public boolean addUserToDatabase(String user, String emailAddress, String pass, int m)
 	{
 
+		database = new UserAdaptor(ApplicationProvider.getApplicationContext());
 
-		//database = new UserAdaptor(ApplicationProvider.getApplicationContext());
-		//System.out.println("len = " + database.getPassword(username).length());
-		if(user==null || emailAddress==null || pass==null ||
-				!validEmail(emailAddress) || database.getPassword(username).length() > 0)
+		if(!validEmail(emailAddress))
 		{
+
 			return false;
 
 		}
 
-		id = (int)database.insertData(user, pass, emailAddress, m);
+		if(database.getPassword(user).length() > 0 || database.getPassword(user) != null)
+		{
 
+			return false;
+
+		}
+
+		if(!checkForNulls(user, emailAddress, pass, m))
+		{
+
+			return false;
+
+		}
+
+		username = user;
+		email = emailAddress;
+		password = pass;
+		mod = m;
+
+		id = (int)database.insertData(user, pass, emailAddress, m);
+		
 		if(id < 0)
 		{
 
 			return false;
 
 		}
-		username = user;
-		email = emailAddress;
-		mod = m;
 
 		return true;
 
@@ -222,15 +253,12 @@ public class user
 	public boolean logIn(String user, String pass)
 	{
 
-		if(user==null || pass==null)
-		{
-			return false;
-		}
+		database = new UserAdaptor(ApplicationProvider.getApplicationContext());
 		int idCheck = database.getID(user, pass);
 
 		if(idCheck < 0)
 		{
-			//System.out.println("id = " + idCheck);
+
 			return false;
 
 		}
@@ -238,23 +266,15 @@ public class user
 		{
 
 			username = user;
+			password = pass;
 			id = idCheck;
 			loggedIn = true;
 			return true;
 
 		}
 
-		//return false;
+		return false;
 
-	}
-
-	public void logout ()
-	{
-		loggedIn = false;
-		username = "";
-		email = "";
-		mod = 0;
-		loggedIn = false;
 	}
 
 	private boolean validEmail(String given)
@@ -264,7 +284,7 @@ public class user
 		int atSign = given.indexOf('@');
 		int dotSign = given.indexOf('.');
 
-		if(atSign < dotSign && dotSign == (size - 4))
+		if(atSign < dotSign && dotSign == (size - 3))
 		{
 
 			return true;
@@ -275,7 +295,7 @@ public class user
 
 	}
 
-	private boolean checkForNulls(String user, String emailAddress, String pass, Integer m)
+	private boolean checkForNulls(String user, String emailAddress, String pass, String m)
 	{
 
 		if(user == null || emailAddress == null || pass == null || m == null)

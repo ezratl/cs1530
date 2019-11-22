@@ -1,57 +1,51 @@
 package com.example.pottypoll;
-
-import androidx.test.core.app.ApplicationProvider;
 import java.io.*; 
 import java.util.*;
 
-
-import java.io.*;
-import java.util.*;
-
-public class restroom
+class restroom
 {
 
 	private static final int MAX_FLAGS = 5;
-	/*
-        private long longitude;
-        private long latitude;
-    */
+/*
+	private long longitude;
+	private long latitude;
+*/	
 	private int rating;
 	//private int numRatings = 0;
 	private int ratingTotal = 0;
-	/*
-        private int id;
-        private int userID;
-        private String gender;
-        private String address;
-        private String name;
-        private int floor;
-        private String hours;
-        private int shower;
-        private int sink;
-        private int paperTowels;
-    */
+/*	
+	private int id;
+	private int userID;
+	private String gender;
+	private String address;
+	private String name;
+	private int floor;
+	private String hours;
+	private int shower;
+	private int sink;
+	private int paperTowels;	
+*/
 	private int flags = 0;
-	private BathroomStruct current;
+	private BathroomStruct current;	
 	private int currentID;
-	private BathroomAdaptor database;
-	private ArrayList<BathroomStruct> restrooms;
+	private BathroomAdaptor database = new BathroomAdaptor();
+	private ArrayList<BathroomStruct> restrooms = new ArrayList<BathroomStruct>();
 
-	public restroom()
+	public  void restroom()
 	{
-		database = new BathroomAdaptor(ApplicationProvider.getApplicationContext());
-		current = new BathroomStruct(0, 0, "", 0, 0, 0, 0, "", 0, 0, "", 0, "", 0, 0, 0);
-		restrooms = new ArrayList<BathroomStruct>();
+
+		current = new BathroomStruct(0, 0, "", 0, 0, 0, 0, "", 0, 0, "", 0, 0, 0, 0, 0);
+
 	}
 
-	public restroom(int id, int author, String gender, int shower, int sink, int papertowels, int active, String location, double x, double y, String building, int floor, String hours, int rating, int raters, int date)
+	public  void restroom(int id, int author, String gender, int shower, int sink, int papertowels, int active, String location, double x, double y, String building, int floor, String hours, int rating, int raters, int date)
 	{
-		database = new BathroomAdaptor(ApplicationProvider.getApplicationContext());
+
 		current = new BathroomStruct(id, author, gender, shower, sink, papertowels, active, location, x, y, building, floor, hours, rating, raters, date);
-		restrooms = new ArrayList<BathroomStruct>();
+
 	}
 
-	public restroom(int alPos)
+	public  void restroom(int alPos)
 	{
 
 		current = restrooms.get(alPos);
@@ -59,15 +53,14 @@ public class restroom
 	}
 
 
-
-	public  void setX(double l)
+	public  void setX(long l)
 	{
 
 		current.XCORD = l;
 
 	}
 
-	public  void setY(double l)
+	public  void setY(long l)
 	{
 
 		current.YCORD = l;
@@ -76,6 +69,8 @@ public class restroom
 
 	public  void setRating(int r)
 	{
+
+		database = new UserAdaptor(ApplicationProvider.getApplicationContext());
 		current.RATERS++;
 		ratingTotal += r;
 		rating = ratingTotal/current.RATERS;
@@ -148,21 +143,20 @@ public class restroom
 
 	}
 
-
-	public double getX()
+	public long getX()
 	{
 
-		double l = current.XCORD;
+		long l = current.XCORD;
 		return l;
 
 	}
 
-
-	public double getY()
+	public long getY()
 	{
 
-		double l = current.YCORD;
+		long l = current.YCORD;
 		return l;
+
 	}
 
 	public int getRating()
@@ -245,13 +239,10 @@ public class restroom
 
 	}
 
-
-	public int getID() {
-		return currentID;
-	}
-
 	public boolean addRestroom()
 	{
+
+		database = new UserAdaptor(ApplicationProvider.getApplicationContext());
 
 		if(!checkForNulls(current.AUTHOR, current.GENDER, current.BUILDNAME, current.XCORD, current.YCORD, current.LOCATION, current.FLOOR, current.HOURS, current.SHOWER, current.SINK, current.PAPERTOWELS))
 		{
@@ -261,7 +252,6 @@ public class restroom
 		}
 
 		currentID = (int)database.insertData(current.AUTHOR, current.GENDER, current.BUILDNAME, current.XCORD, current.YCORD, current.LOCATION, current.FLOOR, current.HOURS, current.SHOWER, current.SINK, current.PAPERTOWELS);
-
 
 		if(currentID < 0)
 		{
@@ -276,10 +266,16 @@ public class restroom
 
 	public boolean addRestroom(int userID, String gender, String address, long xcoord, long ycoord, String name, int floor, String hours, int shower, int sink, int papertowels)
 	{
-    if(!checkForNulls(userID, gender, address, xcoord, ycoord, name, floor, hours, shower, sink, papertowels))
+
+		database = new UserAdaptor(ApplicationProvider.getApplicationContext());
+
+		if(!checkForNulls(userID, gender, address, xcoord, ycoord, name, floor, hours, shower, sink, papertowels))
 		{
+
 			return false;
+
 		}
+
 		currentID = (int)database.insertData(userID, gender, address, xcoord, ycoord, name, floor, hours, shower, sink, papertowels);
 		current.AUTHOR = userID;
 		current.GENDER = gender;
@@ -292,7 +288,6 @@ public class restroom
 		current.SHOWER = shower;
 		current.SINK = sink;
 		current.PAPERTOWELS = papertowels;
-
 
 		if(currentID < 0)
 		{
@@ -307,9 +302,11 @@ public class restroom
 
 	public ArrayList getRestrooms(long lng, long lat)
 	{
+
+		database = new UserAdaptor(ApplicationProvider.getApplicationContext());
 		restrooms = database.getBathroomArray();
 
-		for(int i = 0; i < restrooms.size(); i++)
+		for(int i = 0; i < restrooms.size; i++)
 		{
 
 			if(restrooms.get(i).XCORD == lat || restrooms.get(i).YCORD == lng)
@@ -328,31 +325,28 @@ public class restroom
 	public void addFlag()
 	{
 
+		database = new UserAdaptor(ApplicationProvider.getApplicationContext());
 		flags++;
+		database.addFlag(currentID);
 		checkFlags();
-
-	}
-
-
-	public void deleteBathroom() {
-		//database = new BathroomAdaptor(ApplicationProvider.getApplicationContext());
-		database.deleteBathroom(currentID);
-		current = new BathroomStruct(0, 0, "", 0, 0, 0, 0, "", 0, 0, "", 0, "", 0, 0, 0);
 
 	}
 
 	private void checkFlags()
 	{
 
-		if(flags >= MAX_FLAGS)
+		database = new UserAdaptor(ApplicationProvider.getApplicationContext());
+
+		if(database.getFlags(currentID) >= MAX_FLAGS)
 		{
+
 			database.deleteBathroom(currentID);
 
 		}
 
 	}
 
-	private boolean checkForNulls(int userID, String gender, String address, double xcoord, double ycoord, String name, int floor, String hours, int shower, int sink, int papertowels)
+	private boolean checkForNulls(int userID, String gender, String address, long xcoord, long ycoord, String name, int floor, String hours, int shower, int sink, int papertowels)
 	{
 
 		if(userID < 0 || gender == null || address == null || xcoord < 0 || ycoord < 0 || name == null || floor < 0 || hours == null || shower < 0 || sink < 0 || papertowels < 0)
