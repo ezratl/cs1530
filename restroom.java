@@ -10,9 +10,9 @@ class restroom
 	private long longitude;
 	private long latitude;
 */	
-	private int rating;
+	//private int rating;
 	//private int numRatings = 0;
-	private int ratingTotal = 0;
+	//private int ratingTotal = 0;
 /*	
 	private int id;
 	private int userID;
@@ -42,6 +42,18 @@ class restroom
 	{
 
 		current = new BathroomStruct(id, author, gender, shower, sink, papertowels, active, location, x, y, building, floor, hours, rating, raters, date);
+		currentID = id;
+		current.AUTHOR = author;
+		current.GENDER = gender;
+		current.BUILDNAME = building;
+		current.XCORD = x;
+		current.YCORD = y;
+		current.LOCATION = location;
+		current.FLOOR = floor;
+		current.HOURS = hours;
+		current.SHOWER = shower;
+		current.SINK = sink;
+		current.PAPERTOWELS = papertowels;
 
 	}
 
@@ -72,10 +84,8 @@ class restroom
 
 		database = new UserAdaptor(ApplicationProvider.getApplicationContext());
 		current.RATERS++;
-		ratingTotal += r;
-		rating = ratingTotal/current.RATERS;
-		current.RATING = rating;
-		database.addRating(currentID);
+		current.RATING += r;
+		database.addRating(currentID, r);
 		database.addRater(currentID);
 
 	}
@@ -162,7 +172,8 @@ class restroom
 	public int getRating()
 	{
 
-		int r = current.RATING;
+		database = new UserAdaptor(ApplicationProvider.getApplicationContext());
+		int r = database.getRating(currentID)/database.getRaters(currentID);
 		return r;
 
 	}
