@@ -148,7 +148,6 @@ public class restroom
 
 	}
 
-
 	public double getX()
 	{
 
