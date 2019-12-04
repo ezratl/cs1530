@@ -1,6 +1,7 @@
 package com.example.pottypoll;
 
 import android.content.Context;
+import android.widget.Toast;
 
 import androidx.test.core.app.ApplicationProvider;
 import java.io.*; 
@@ -9,6 +10,8 @@ import java.util.*;
 
 import java.io.*;
 import java.util.*;
+
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 
 public class restroom
 {
@@ -48,7 +51,7 @@ public class restroom
 
 	public restroom(int id, int author, String gender, int shower, int sink, int papertowels, int active, String location, double x, double y, String building, int floor, String hours, int rating, int raters, int date)
 	{
-		database = new BathroomAdaptor(ApplicationProvider.getApplicationContext());
+		database = new BathroomAdaptor(getApplicationContext());
 		current = new BathroomStruct(id, author, gender, shower, sink, papertowels, active, location, x, y, building, floor, hours, rating, raters, date);
 		restrooms = new ArrayList<BathroomStruct>();
 	}
@@ -275,10 +278,11 @@ public class restroom
 
 	}
 
-	public boolean addRestroom(int userID, String gender, String address, long xcoord, long ycoord, String name, int floor, String hours, int shower, int sink, int papertowels)
+	public boolean addRestroom(int userID, String gender, String address, double xcoord, double ycoord, String name, int floor, String hours, int shower, int sink, int papertowels)
 	{
     if(!checkForNulls(userID, gender, address, xcoord, ycoord, name, floor, hours, shower, sink, papertowels))
 		{
+			Toast.makeText(getApplicationContext(), "null entries", Toast.LENGTH_SHORT);
 			return false;
 		}
 		currentID = (int)database.insertData(userID, gender, address, xcoord, ycoord, name, floor, hours, shower, sink, papertowels);
@@ -297,7 +301,7 @@ public class restroom
 
 		if(currentID < 0)
 		{
-
+			Toast.makeText(getApplicationContext(), "failed to add to database", Toast.LENGTH_SHORT);
 			return false;
 
 		}
@@ -306,7 +310,7 @@ public class restroom
 
 	}
 
-	public ArrayList getRestrooms(long lng, long lat)
+	public ArrayList getRestrooms(double lng, double lat)
 	{
 		restrooms = database.getBathroomArray();
 
@@ -356,7 +360,7 @@ public class restroom
 	private boolean checkForNulls(int userID, String gender, String address, double xcoord, double ycoord, String name, int floor, String hours, int shower, int sink, int papertowels)
 	{
 
-		if(userID < 0 || gender == null || gender.length() == 0 || address == null || address.length() == 0 || xcoord < 0 || ycoord < 0 || name == null || name.length() == 0 || floor < 0 || hours == null || hours.length() == 0 || shower < 0 || sink < 0 || papertowels < 0)
+		if(userID < 0 || gender == null || gender.length() == 0 || address == null || address.length() == 0 || name == null || name.length() == 0 || floor < 0 || hours == null || hours.length() == 0 || shower < 0 || sink < 0 || papertowels < 0)
 		{
 
 			return false;

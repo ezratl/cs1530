@@ -13,6 +13,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -23,11 +24,14 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Set;
 
-public class MapActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
+public class MapActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, GoogleMap.OnMapLongClickListener {
 
     private GoogleMap mMap;
 
     private ArrayList<BathroomStruct> selectedLocationList;
+
+    private Marker currentAddMarker = null;
+    private FloatingActionButton addBathroomButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,14 +42,17 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        FloatingActionButton addBathroomButton = (FloatingActionButton) findViewById(R.id.addBathroomButton);
+        addBathroomButton = (FloatingActionButton) findViewById(R.id.addBathroomButton);
         addBathroomButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
                 Intent intent = new Intent(MapActivity.this, add_review_page.class);
-                startActivity(intent);
+                intent.putExtra("LOCATION", currentAddMarker.getPosition());
+                startActivityForResult(intent, 10);
             }
         });
+
+        addBathroomButton.hide();
     }
 
 
@@ -72,37 +79,14 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
             public void onCameraIdle() {
                 //Toast.makeText(MapActivity.this, mMap.getUiSettings().toString(),Toast.LENGTH_SHORT);
 
-                BathroomAdaptor bathroomAdaptor = new BathroomAdaptor(MapActivity.this);
-                ArrayList<BathroomStruct> bathrooms = (ArrayList<BathroomStruct>) bathroomAdaptor.getBathroomArray();
-
-                HashMap<LatLng, ArrayList<BathroomStruct>> brMap = new HashMap<LatLng, ArrayList<BathroomStruct>>();
-
-                mMap.clear();
-                for(BathroomStruct bathroom : bathrooms) {
-                    LatLng coord = new LatLng(bathroom.YCORD, bathroom.XCORD);
-                    ArrayList<BathroomStruct> locList = brMap.get(coord);
-                    if(locList == null) {
-                        locList = new ArrayList<BathroomStruct>();
-                        brMap.put(coord, locList);
-                    }
-                    locList.add(bathroom);
-
-                }
-
-                Set<Entry<LatLng, ArrayList<BathroomStruct>>> locations = brMap.entrySet();
-                for(Entry<LatLng, ArrayList<BathroomStruct>> location : locations){
-                    LatLng coord = location.getKey();
-                    MarkerOptions opts = new MarkerOptions();
-                    opts.position(coord);
-
-                    Marker mk = mMap.addMarker(opts);
-                    mk.setTag(location.getValue());
-                }
+                updateMarkers();
+                addBathroomButton.hide();
 
             }
         });
 
         mMap.setOnMarkerClickListener(this);
+        mMap.setOnMapLongClickListener(this);
 
         //LatLng ny = new LatLng(40.7143528, -74.0059731);
 
@@ -112,6 +96,35 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
 
         mMap.moveCamera(CameraUpdateFactory.newLatLng(cathy));
         mMap.moveCamera(CameraUpdateFactory.zoomTo(16));
+    }
+
+    private void updateMarkers(){
+        BathroomAdaptor bathroomAdaptor = new BathroomAdaptor(MapActivity.this);
+        ArrayList<BathroomStruct> bathrooms = (ArrayList<BathroomStruct>) bathroomAdaptor.getBathroomArray();
+
+        HashMap<LatLng, ArrayList<BathroomStruct>> brMap = new HashMap<LatLng, ArrayList<BathroomStruct>>();
+
+        mMap.clear();
+        for(BathroomStruct bathroom : bathrooms) {
+            LatLng coord = new LatLng(bathroom.YCORD, bathroom.XCORD);
+            ArrayList<BathroomStruct> locList = brMap.get(coord);
+            if(locList == null) {
+                locList = new ArrayList<BathroomStruct>();
+                brMap.put(coord, locList);
+            }
+            locList.add(bathroom);
+
+        }
+
+        Set<Entry<LatLng, ArrayList<BathroomStruct>>> locations = brMap.entrySet();
+        for(Entry<LatLng, ArrayList<BathroomStruct>> location : locations){
+            LatLng coord = location.getKey();
+            MarkerOptions opts = new MarkerOptions();
+            opts.position(coord);
+
+            Marker mk = mMap.addMarker(opts);
+            mk.setTag(location.getValue());
+        }
     }
 
     public boolean onMarkerClick(final Marker marker){
@@ -146,6 +159,17 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     }
 
     @Override
+    public void onMapLongClick(LatLng point) {
+        if(currentAddMarker != null)
+            currentAddMarker.remove();
+        MarkerOptions newMarker = new MarkerOptions();
+        newMarker.position(point);
+        newMarker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+        currentAddMarker = mMap.addMarker(newMarker);
+        addBathroomButton.show();
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == 0 && resultCode == 1){
@@ -164,6 +188,9 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
 
                 //start activity
             }
+        }
+        else if(requestCode == 10){
+            updateMarkers();
         }
     }
 }
