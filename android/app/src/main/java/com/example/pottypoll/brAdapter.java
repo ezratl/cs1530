@@ -1,6 +1,7 @@
 package com.example.pottypoll;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,8 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
+
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 
 public class brAdapter extends
         RecyclerView.Adapter<brAdapter.ViewHolder> {
@@ -36,6 +39,7 @@ public class brAdapter extends
 
     // Store a member variable for the contacts
     private List<BathroomStruct> bathrooms;
+    private Context context;
 
     // Pass in the contact array into the constructor
     public brAdapter(List<BathroomStruct> _bathrooms) {
@@ -44,7 +48,7 @@ public class brAdapter extends
 
     @Override
     public brAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
+        context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
         // Inflate the custom layout
@@ -59,7 +63,7 @@ public class brAdapter extends
     @Override
     public void onBindViewHolder(brAdapter.ViewHolder viewHolder, int position) {
         // Get the data model based on position
-        BathroomStruct bathroom = bathrooms.get(position);
+        final BathroomStruct bathroom = bathrooms.get(position);
 
         // Set item views based on your views and data model
         TextView textView = viewHolder.nameTextView;
@@ -67,6 +71,15 @@ public class brAdapter extends
         Button button = viewHolder.reviewButton;
         button.setText("Review");
         button.setEnabled(true);
+
+        button.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Intent intent = new Intent(context, add_comment.class);
+                intent.putExtra("BATHROOM", bathroom);
+                context.startActivity(intent);
+            }
+        });
     }
 
     // Returns the total count of items in the list

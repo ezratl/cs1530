@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.View;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class bathroomList extends AppCompatActivity {
@@ -21,13 +22,14 @@ public class bathroomList extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bathroom_list);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        //Toolbar toolbar = findViewById(R.id.listToolbar);
+        //setSupportActionBar(toolbar);
         restroom _restroom = new restroom(getApplicationContext());
 
 
         RecyclerView brList = (RecyclerView) findViewById(R.id.brList);
-        brs = _restroom.getRestrooms(0,0);
+        //brs = _restroom.getRestrooms(0,0);
+        brs = (ArrayList<BathroomStruct>)getIntent().getSerializableExtra("LIST");
         brAdapter adapter = new brAdapter(brs);
         brList.setAdapter(adapter);
         brList.setLayoutManager(new LinearLayoutManager(this));

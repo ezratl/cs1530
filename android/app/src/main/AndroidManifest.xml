@@ -43,6 +43,12 @@
             android:label="@string/title_activity_map" />
         <activity android:name=".add_review_page"
             android:label="@string/title_add_review_page"></activity>
+        <activity
+            android:name=".bathroomList"
+            android:label="@string/title_bathroomList"></activity>
+        <activity
+            android:name=".add_comment"
+            android:label="@string/title_add_comment"></activity>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

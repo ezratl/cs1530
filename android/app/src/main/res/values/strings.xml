@@ -96,5 +96,7 @@
     <string name="title_activity_typed_review">typed_review</string>
     <string name="title_activity_bathroom_select">BathroomSelect</string>
     <string name="title_activity_add_comment">add_comment</string>
-    <string name="title_add_review_page">review</string>
+    <string name="title_add_review_page">Add bathroom</string>
+    <string name="title_bathroomList">Bathrooms</string>
+    <string name="title_add_comment">Add review</string>
 </resources>

@@ -1,5 +1,7 @@
 package com.example.pottypoll;
 
+import android.content.Context;
+
 import androidx.test.core.app.ApplicationProvider;
 import java.io.*; 
 import java.util.*;
@@ -27,20 +29,20 @@ public class comment
 	private int flags;
 	private CommentStruct current;
 	private int currentID;
-	private CommentAdaptor database = new CommentAdaptor(ApplicationProvider.getApplicationContext());
+	private CommentAdaptor database;
 	private ArrayList<CommentStruct> comments = new ArrayList<CommentStruct>();
 
-	public comment()
+	public comment(Context context)
 	{
-
+		database = new CommentAdaptor(context);
 		current = new CommentStruct(0, 0, 0, 0, 0, 0, "");
 
 	}
 
-	public comment(String comment, int rating, int userID, int bathroomID, int date, int helpful, int unhelpful)
+	public comment(Context context, String comment, int rating, int userID, int bathroomID, int date, int helpful, int unhelpful)
 
 	{
-
+		database = new CommentAdaptor(context);
 		current = new CommentStruct(bathroomID, userID, rating, date, helpful, unhelpful, comment);
 
 	}

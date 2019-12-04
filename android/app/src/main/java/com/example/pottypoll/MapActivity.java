@@ -19,6 +19,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -132,7 +133,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
 
         if(bathrooms != null){
             //view bathroom activity
-            Toast.makeText(this, "view bathrooms:" + bathrooms.size(), Toast.LENGTH_SHORT).show();
+            /*Toast.makeText(this, "view bathrooms:" + bathrooms.size(), Toast.LENGTH_SHORT).show();
             if(bathrooms.size() > 1){
                 ArrayList<Integer> floors = new ArrayList<Integer>();
                 for(BathroomStruct br : bathrooms)
@@ -145,11 +146,15 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                 startActivityForResult(intent, 0);
             }
             else {
-                Intent intent = new Intent(/*this, view class*/);
+                Intent intent = new Intent();
                 intent.putExtra("BATHROOM", bathrooms.get(0));
 
                 //start activity
-            }
+            }*/
+
+            Intent intent = new Intent(this, bathroomList.class);
+            intent.putExtra("LIST", (Serializable)bathrooms);
+            startActivity(intent);
         }
         else{
             Toast.makeText(this, "Empty marker", Toast.LENGTH_SHORT).show();

@@ -22,30 +22,44 @@ public class add_comment extends AppCompatActivity {
     RatingBar rating;
     SharedPreferences sharedPreferences;// = getApplicationContext().getSharedPreferences("DATA", Context.MODE_PRIVATE);
     CommentAdaptor cDB;
+    BathroomStruct bathroom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_comment);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        //Toolbar toolbar = findViewById(R.id.toolbar);
+        //setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
+        /*FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
-        });
-/*
+        });*/
+
+        commentText = findViewById(R.id.comment_text);
+        rating = findViewById(R.id.comment_rating);
+        bathroom = (BathroomStruct)getIntent().getSerializableExtra("BATHROOM");
+
         final Button submitButton = findViewById(R.id.comment_submit_button);
         submitButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                comment newComment = new comment();
+                comment newComment = new comment(add_comment.this);
+
+                newComment.setComment(commentText.getText().toString());
+                newComment.setRating(rating.getNumStars());
+                newComment.setBathroomID(bathroom.ID);
+
+                CommentAdaptor adaptor = new CommentAdaptor(add_comment.this);
+                adaptor.insertData(newComment.getBathroomID(), newComment.getUserID(), newComment.getRating(), newComment.getComment());
+
+                finish();
             }
         });
-*/
+
     }
 
     public  void submitComment(View view)
