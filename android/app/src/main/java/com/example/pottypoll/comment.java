@@ -268,7 +268,7 @@ public class comment
 	{
 
 
-		if(bID < 0 || uID < 0 || cmt == null)
+		if(bID < 0 || uID < 0 || cmt == null || cmt.length() == 0)
 		{
 
 			return false;
