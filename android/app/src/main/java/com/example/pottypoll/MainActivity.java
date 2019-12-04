@@ -3,7 +3,9 @@ package com.example.pottypoll;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.test.core.app.ApplicationProvider;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.view.View;
 import android.os.Bundle;
 import android.widget.EditText;
@@ -20,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     UserAdaptor userDB;
     EditText username;
     EditText password;
+    SharedPreferences sharedPreferences;// = getApplicationContext().getSharedPreferences("DATA", Context.MODE_PRIVATE);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,7 +41,8 @@ public class MainActivity extends AppCompatActivity {
         int userID = userDB.getID(username.getText().toString(), password.getText().toString());
         if (userID >= 0)
             message = Toast.makeText(getApplicationContext(), userID, Toast.LENGTH_LONG);
-
+        sharedPreferences = getApplicationContext().getSharedPreferences("DATA", Context.MODE_PRIVATE);
+        sharedPreferences.edit().putInt("USERID",userID).apply();
         message.show();
 
 
@@ -51,10 +55,10 @@ public class MainActivity extends AppCompatActivity {
         username = (EditText)findViewById(R.id.username);
         password = (EditText)findViewById(R.id.password);
         message = Toast.makeText(getApplicationContext(), username.getText().toString(), Toast.LENGTH_LONG);
-        long userID = userDB.insertData(username.getText().toString(), password.getText().toString(), "name@email.com", 0);
+        int userID = (int)userDB.insertData(username.getText().toString(), password.getText().toString(), "name@email.com", 0);
         if (userID > 0)
             message = Toast.makeText(getApplicationContext(), "YAY" , Toast.LENGTH_LONG);
-
+        sharedPreferences.edit().putInt("USERID",userID).apply();
         message.show();
     }
 

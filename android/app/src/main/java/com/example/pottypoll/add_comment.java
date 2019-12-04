@@ -1,5 +1,7 @@
 package com.example.pottypoll;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -11,11 +13,16 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RatingBar;
 import android.widget.Toast;
 
 public class add_comment extends AppCompatActivity {
 
-    EditText comment;
+    EditText commentText;
+    RatingBar rating;
+    SharedPreferences sharedPreferences;// = getApplicationContext().getSharedPreferences("DATA", Context.MODE_PRIVATE);
+    CommentAdaptor cDB;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,7 +51,31 @@ public class add_comment extends AppCompatActivity {
     public  void submitComment(View view)
     {
 
-        //
+        commentText = (EditText)findViewById(R.id.comment_text);
+        rating = (RatingBar)findViewById(R.id.comment_rating);
+
+        String commentString = commentText.getText().toString();
+        int ratingNum = rating.getNumStars();
+        sharedPreferences = getApplicationContext().getSharedPreferences("DATA", Context.MODE_PRIVATE);
+        int userID = sharedPreferences.getInt("USERID", 0);
+        //int bathroomID = sharedPreferences.getInt("BATHROOMID", 0);
+
+        cDB = new CommentAdaptor(this);
+        int commentID = (int)cDB.insertData(0, 10, ratingNum, commentString);
+
+        if(commentID >= 0)
+        {
+
+            Toast message = Toast.makeText(getApplicationContext(), "ADDED TO DATABASE" , Toast.LENGTH_LONG);
+            message.show();
+        }
+        else
+        {
+
+            Toast message = Toast.makeText(getApplicationContext(), "NEGATIVE" , Toast.LENGTH_LONG);
+            message.show();
+
+        }
 
     }
 
