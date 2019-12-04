@@ -94,6 +94,6 @@
     </string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_typed_review">typed_review</string>
-    <string name="google_android_map_api_key">AIzaSyAwwEE9yTcJ8lmIWDytX0bjhCn4KrGJIWs</string>
+    <string name="title_activity_bathroom_select">BathroomSelect</string>
     <string name="title_activity_add_comment">add_comment</string>
 </resources>

@@ -1,6 +1,8 @@
 package com.example.pottypoll;
 
-public class BathroomStruct {
+import java.io.Serializable;
+
+public class BathroomStruct implements Serializable {
 
     public int ID; //autoincrementing int
     public int AUTHOR;   //int

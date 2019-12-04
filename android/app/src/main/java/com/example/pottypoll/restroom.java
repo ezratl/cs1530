@@ -1,5 +1,7 @@
 package com.example.pottypoll;
 
+import android.content.Context;
+
 import androidx.test.core.app.ApplicationProvider;
 import java.io.*; 
 import java.util.*;
@@ -37,9 +39,9 @@ public class restroom
 	private BathroomAdaptor database;
 	private ArrayList<BathroomStruct> restrooms;
 
-	public restroom()
+	public restroom(Context context)
 	{
-		database = new BathroomAdaptor(ApplicationProvider.getApplicationContext());
+		database = new BathroomAdaptor(context);
 		current = new BathroomStruct(0, 0, "", 0, 0, 0, 0, "", 0, 0, "", 0, "", 0, 0, 0);
 		restrooms = new ArrayList<BathroomStruct>();
 	}
