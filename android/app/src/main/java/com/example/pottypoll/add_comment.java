@@ -58,10 +58,10 @@ public class add_comment extends AppCompatActivity {
         int ratingNum = rating.getNumStars();
         sharedPreferences = getApplicationContext().getSharedPreferences("DATA", Context.MODE_PRIVATE);
         int userID = sharedPreferences.getInt("USERID", 0);
-        //int bathroomID = sharedPreferences.getInt("BATHROOMID", 0);
+        int bathroomID = sharedPreferences.getInt("BATHROOMID", 0);
 
         cDB = new CommentAdaptor(this);
-        int commentID = (int)cDB.insertData(0, 10, ratingNum, commentString);
+        int commentID = (int)cDB.insertData(bathroomID, userID, ratingNum, commentString);
 
         if(commentID >= 0)
         {
