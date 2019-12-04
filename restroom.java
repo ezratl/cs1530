@@ -320,7 +320,7 @@ class restroom
 		for(int i = 0; i < restrooms.size; i++)
 		{
 
-			if(restrooms.get(i).XCORD == lat || restrooms.get(i).YCORD == lng)
+			if(!(restrooms.get(i).XCORD == lat && restrooms.get(i).YCORD == lng))
 			{
 
 				restrooms.remove(i);
