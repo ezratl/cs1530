@@ -3,6 +3,7 @@ package com.example.pottypoll;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -38,6 +39,7 @@ public class bathroomList extends AppCompatActivity {
 
     public void addBathroom(View view) {
         Intent intent = new Intent(this, add_review_page.class);
+        intent.putExtra("LOCATION", new LatLng(brs.get(0).YCORD, brs.get(0).XCORD));
         startActivity(intent);
     }
 
