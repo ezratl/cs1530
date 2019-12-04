@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void sendMessage (View view) {
 
-        Intent intent = new Intent(MainActivity.this, Map.class);
+        Intent intent = new Intent(MainActivity.this, add_comment.class);
         startActivity(intent);
 
 

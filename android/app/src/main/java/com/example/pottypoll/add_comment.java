@@ -9,13 +9,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
-public class typed_review extends AppCompatActivity {
+public class add_comment extends AppCompatActivity {
 
+    EditText comment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_typed_review);
+        setContentView(R.layout.activity_add_comment);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -27,6 +31,21 @@ public class typed_review extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+/*
+        final Button submitButton = findViewById(R.id.comment_submit_button);
+        submitButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                comment newComment = new comment();
+            }
+        });
+*/
+    }
+
+    public  void submitComment(View view)
+    {
+
+        //
+
     }
 
 }
