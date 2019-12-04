@@ -10,8 +10,8 @@ public class BathroomStruct {
     public int PAPERTOWELS; //int 0 or 1
     public int ACTIVE; //int 0 ir 1
     public String LOCATION; //varchar
-    double XCORD; //real
-    double YCORD;   //real
+    public double XCORD; //real
+    public double YCORD;   //real
     public String BUILDNAME; //varchar
     public int FLOOR; //int
     public String HOURS; //varchar
