@@ -41,6 +41,8 @@
         <activity
             android:name=".MapActivity"
             android:label="@string/title_activity_map" />
+        <activity android:name=".add_review_page"
+            android:label="@string/title_add_review_page"></activity>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
